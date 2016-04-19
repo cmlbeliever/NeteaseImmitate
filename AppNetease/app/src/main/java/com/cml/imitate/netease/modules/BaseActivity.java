@@ -4,7 +4,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.cml.imitate.netease.R;
@@ -49,13 +51,13 @@ public class BaseActivity extends AppCompatActivity {
             }
         }
 
-//        if (null != menuBtn) {
-//            toolbar.removeView(menuBtn);
-//            RelativeLayout toolbarTitleContainer = (RelativeLayout) findViewById(R.id.toolbar_title_container);
-//            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-//            params.addRule(RelativeLayout.CENTER_VERTICAL);
-//            toolbarTitleContainer.addView(menuBtn, 0, params);
-//        }
+        if (null != menuBtn) {
+            toolbar.removeView(menuBtn);
+            RelativeLayout toolbarTitleContainer = (RelativeLayout) findViewById(R.id.toolbar_title_container);
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.addRule(RelativeLayout.CENTER_VERTICAL);
+            toolbarTitleContainer.addView(menuBtn, 0, params);
+        }
 
     }
 
