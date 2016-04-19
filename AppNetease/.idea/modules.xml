@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/AppNetease.iml" filepath="$PROJECT_DIR$/AppNetease.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/commonlib/commonlib.iml" filepath="$PROJECT_DIR$/commonlib/commonlib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/glidelib/glidelib.iml" filepath="$PROJECT_DIR$/glidelib/glidelib.iml" />
     </modules>
   </component>
 </project>
