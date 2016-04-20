@@ -1,15 +1,23 @@
 package com.cml.imitate.netease.modules.home;
 
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.view.ViewCompat;
+import android.support.v4.view.WindowInsetsCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 
 import com.cml.imitate.netease.R;
 import com.cml.imitate.netease.modules.BaseActivity;
 import com.cml.second.app.common.widget.menu.NavigationMenuView;
+import com.socks.library.KLog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,37 +32,58 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
+
+        //隐藏导航栏
+        Window window = getWindow();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {//全屏隐藏虚拟按键
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+//            WindowManager.LayoutParams params = window.getAttributes();
+//            params.systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+//            window.setAttributes(params);
+
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
+                    | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(Color.TRANSPARENT);
+            window.setNavigationBarColor(Color.TRANSPARENT);
+        }
+
         setContentView(R.layout.activity_main);
 
 
 //        //TODO 期待更好的方法，直接使用style就能解决
-//        ViewCompat.setOnApplyWindowInsetsListener(getWindow().getDecorView(),
-//                new android.support.v4.view.OnApplyWindowInsetsListener() {
-//                    @Override
-//                    public WindowInsetsCompat onApplyWindowInsets(View v,
-//                                                                  WindowInsetsCompat insets) {
-//
-//                        if (toolbar.getTag() == null) {
-//                            KLog.d(TAG, "=====onApplyWindowInsets>>>" + getStatusBarHeight());
-//                            toolbar.setTag("true");
-//                            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) toolbar.getLayoutParams();
-//                            params.topMargin = getStatusBarHeight();
-//                            toolbar.requestLayout();
-//                        }
-//
-//                        return insets.consumeSystemWindowInsets();
-//                    }
-//
-//
-//                });
+        ViewCompat.setOnApplyWindowInsetsListener(getWindow().getDecorView(),
+                new android.support.v4.view.OnApplyWindowInsetsListener() {
+                    @Override
+                    public WindowInsetsCompat onApplyWindowInsets(View v,
+                                                                  WindowInsetsCompat insets) {
+                        KLog.d(TAG, "=====onApplyWindowInsets>>>" + getStatusBarHeight());
+                        if (toolbar.getTag() == null) {
+                            toolbar.setTag("true");
+                            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) toolbar.getLayoutParams();
+                            params.topMargin = getStatusBarHeight();
+                            toolbar.requestLayout();
+                        }
+
+                        return insets.consumeSystemWindowInsets();
+                    }
+
+
+                });
 
         //设置titlebar
         initToolbar();
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        setCustomTitle(getTitle());
-
+//        getSupportActionBar().setDisplayShowTitleEnabled(false);
+//        setCustomTitle(getTitle());
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 //        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
 //                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -78,6 +107,6 @@ public class MainActivity extends BaseActivity {
 //        navigationView.setNavigationItemSelectedListener(menuHelper);
 
         //将默认的menu栏迁移到自定义的custom title容器上，以解决title居中问题
-        setupCustomNavigation();
+//        setupCustomNavigation();
     }
 }
