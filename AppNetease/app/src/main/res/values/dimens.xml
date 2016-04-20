@@ -9,6 +9,8 @@
 
 
     <dimen name="toolbar_margin">65dp</dimen>
-    <dimen name="actionBarSize">76dp</dimen>
+    <dimen name="actionBarSize">56dp</dimen>
     <dimen name="statusBarSize">20dp</dimen>
+
+    <dimen name="toolbar_fix_height">0dp</dimen>
 </resources>

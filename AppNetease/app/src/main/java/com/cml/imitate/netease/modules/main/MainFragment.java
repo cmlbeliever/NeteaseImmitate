@@ -7,6 +7,8 @@ import android.view.View;
 import com.cml.imitate.netease.R;
 import com.cml.imitate.netease.modules.BaseFragment;
 
+import butterknife.OnClick;
+
 /**
  * Created by cmlBeliever on 2016/4/20.
  */
@@ -21,6 +23,10 @@ public class MainFragment extends BaseFragment implements MainContract.View {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 
+    }
+
+    @OnClick(R.id.toolbar_menu)
+    public void onMenuClick(View v) {
     }
 
     @Override

@@ -20,10 +20,20 @@
             app:contentInsetStart="0dp"
             app:popupTheme="@style/AppTheme.PopupOverlay">
 
-            <RelativeLayout
+            <LinearLayout
                 android:id="@+id/toolbar_title_container"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:orientation="horizontal"
+                android:layout_marginTop="@dimen/toolbar_fix_height"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:id="@+id/toolbar_menu"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:src="@drawable/actionbar_menu"
+                    android:layout_height="wrap_content"/>
 
                 <TextView
                     android:id="@+id/toolbar_title"
@@ -34,7 +44,7 @@
                     android:gravity="center"
                     android:textSize="18sp"/>
 
-            </RelativeLayout>
+            </LinearLayout>
 
 
         </android.support.v7.widget.Toolbar>
