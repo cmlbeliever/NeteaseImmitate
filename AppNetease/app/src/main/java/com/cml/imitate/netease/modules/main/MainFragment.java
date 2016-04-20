@@ -25,7 +25,6 @@ public class MainFragment extends BaseFragment implements MainContract.View {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-
     }
 
     @OnClick(R.id.toolbar_menu)
