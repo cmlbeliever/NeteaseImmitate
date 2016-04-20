@@ -6,6 +6,7 @@ import android.view.View;
 
 import com.cml.imitate.netease.R;
 import com.cml.imitate.netease.modules.BaseFragment;
+import com.cml.imitate.netease.modules.container.ContainerContract;
 
 import butterknife.OnClick;
 
@@ -17,7 +18,9 @@ public class MainFragment extends BaseFragment implements MainContract.View {
     private MainContract.Presenter presenter;
 
     public static MainFragment getInstance() {
-        return new MainFragment();
+        MainFragment fragment = new MainFragment();
+        new MainPresenter(fragment);
+        return fragment;
     }
 
     @Override
@@ -27,6 +30,10 @@ public class MainFragment extends BaseFragment implements MainContract.View {
 
     @OnClick(R.id.toolbar_menu)
     public void onMenuClick(View v) {
+        ContainerContract.View containerView = (ContainerContract.View) getActivity();
+        if (null != containerView) {
+            containerView.toggleMenu();
+        }
     }
 
     @Override
@@ -38,4 +45,5 @@ public class MainFragment extends BaseFragment implements MainContract.View {
     public void setPresenter(MainContract.Presenter presenter) {
         this.presenter = presenter;
     }
+
 }

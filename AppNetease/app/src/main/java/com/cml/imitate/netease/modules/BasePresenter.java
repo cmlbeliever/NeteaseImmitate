@@ -16,13 +16,9 @@
 
 package com.cml.imitate.netease.modules;
 
-import com.cml.imitate.netease.modules.container.ContainerContract;
-
 public interface BasePresenter {
 
     void subscribe();
 
     void unsubscribe();
-
-    void setContainerView(ContainerContract.View containerView);
 }

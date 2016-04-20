@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.LayoutInflater;
@@ -15,7 +16,6 @@ import android.view.WindowManager;
 
 import com.cml.imitate.netease.R;
 import com.cml.imitate.netease.modules.BaseActivity;
-import com.cml.imitate.netease.modules.BasePresenter;
 import com.cml.imitate.netease.modules.main.MainFragment;
 import com.cml.second.app.common.widget.menu.NavigationMenuView;
 
@@ -118,15 +118,16 @@ public class ContainerActivity extends BaseActivity implements ContainerContract
     public void setContainer(Fragment target) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.container, target);
-        if (target instanceof BasePresenter) {
-            BasePresenter presenter = (BasePresenter) target;
-            presenter.setContainerView(this);
-        }
         transaction.commit();
     }
 
     @Override
     public void toggleMenu() {
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            drawer.openDrawer(GravityCompat.START);
+        }
 
     }
 

@@ -22,9 +22,4 @@ public class ContainerPresenter implements ContainerContract.Presenter {
 
     }
 
-    @Override
-    public void setContainerView(ContainerContract.View containerView) {
-
-    }
-
 }
