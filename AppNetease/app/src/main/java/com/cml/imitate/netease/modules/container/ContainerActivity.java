@@ -1,34 +1,34 @@
-package com.cml.imitate.netease.modules.home;
+package com.cml.imitate.netease.modules.container;
 
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.view.ViewCompat;
-import android.support.v4.view.WindowInsetsCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.LinearLayout;
 
 import com.cml.imitate.netease.R;
 import com.cml.imitate.netease.modules.BaseActivity;
+import com.cml.imitate.netease.modules.BasePresenter;
+import com.cml.imitate.netease.modules.main.MainFragment;
 import com.cml.second.app.common.widget.menu.NavigationMenuView;
-import com.socks.library.KLog;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends BaseActivity {
+public class ContainerActivity extends BaseActivity implements ContainerContract.View {
 
     private DrawerLayout drawer;
     private NavigationMenuView menuView;
     private FloatingActionButton floatingActionButton;
     private MenuHelper menuHelper;
-    private LinearLayout toolbarCustomLayout;//自定义toolbar背景界面
+
+    private ContainerContract.Presenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,29 +59,28 @@ public class MainActivity extends BaseActivity {
 
         setContentView(R.layout.activity_main);
 
-
 //        //TODO 期待更好的方法，直接使用style就能解决
-        ViewCompat.setOnApplyWindowInsetsListener(getWindow().getDecorView(),
-                new android.support.v4.view.OnApplyWindowInsetsListener() {
-                    @Override
-                    public WindowInsetsCompat onApplyWindowInsets(View v,
-                                                                  WindowInsetsCompat insets) {
-                        KLog.d(TAG, "=====onApplyWindowInsets>>>" + getStatusBarHeight());
-                        if (toolbar.getTag() == null) {
-                            toolbar.setTag("true");
-                            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) toolbar.getLayoutParams();
-                            params.topMargin = getStatusBarHeight();
-                            toolbar.requestLayout();
-                        }
-
-                        return insets.consumeSystemWindowInsets();
-                    }
-
-
-                });
+//        ViewCompat.setOnApplyWindowInsetsListener(getWindow().getDecorView(),
+//                new android.support.v4.view.OnApplyWindowInsetsListener() {
+//                    @Override
+//                    public WindowInsetsCompat onApplyWindowInsets(View v,
+//                                                                  WindowInsetsCompat insets) {
+//                        KLog.d(TAG, "=====onApplyWindowInsets>>>" + getStatusBarHeight());
+//                        if (toolbar.getTag() == null) {
+//                            toolbar.setTag("true");
+//                            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) toolbar.getLayoutParams();
+//                            params.topMargin = getStatusBarHeight();
+//                            toolbar.requestLayout();
+//                        }
+//
+//                        return insets.consumeSystemWindowInsets();
+//                    }
+//
+//
+//                });
 
         //设置titlebar
-        initToolbar();
+//        initToolbar();
 //        getSupportActionBar().setDisplayShowTitleEnabled(false);
 //        setCustomTitle(getTitle());
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -108,5 +107,30 @@ public class MainActivity extends BaseActivity {
 
         //将默认的menu栏迁移到自定义的custom title容器上，以解决title居中问题
 //        setupCustomNavigation();
+
+        //TODO
+        new ContainerPresenter(this);
+        setContainer(MainFragment.getInstance());
+    }
+
+    @Override
+    public void setContainer(Fragment target) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.container, target);
+        if (target instanceof BasePresenter) {
+            BasePresenter presenter = (BasePresenter) target;
+            presenter.setContainerView(this);
+        }
+        transaction.commit();
+    }
+
+    @Override
+    public void toggleMenu() {
+
+    }
+
+    @Override
+    public void setPresenter(ContainerContract.Presenter presenter) {
+        this.presenter = presenter;
     }
 }

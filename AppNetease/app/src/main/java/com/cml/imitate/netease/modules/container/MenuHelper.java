@@ -1,4 +1,4 @@
-package com.cml.imitate.netease.modules.home;
+package com.cml.imitate.netease.modules.container;
 
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -12,10 +12,10 @@ import com.cml.second.app.common.widget.menu.NavigationMenuView;
  * Created by cmlBeliever on 2016/2/24.
  */
 public class MenuHelper implements NavigationMenuView.OnMenuSelectedLisener {
-    private MainActivity mainActivity;
+    private ContainerActivity mainActivity;
     private DrawerLayout drawer;
 
-    public MenuHelper(MainActivity mainActivity, DrawerLayout drawer) {
+    public MenuHelper(ContainerActivity mainActivity, DrawerLayout drawer) {
         this.mainActivity = mainActivity;
         this.drawer = drawer;
     }
