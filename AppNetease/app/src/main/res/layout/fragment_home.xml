@@ -46,17 +46,20 @@
 
                     <ImageView
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/actionbar_discover_normal"/>
-
-                    <ImageView
-                        android:layout_width="wrap_content"
+                        android:id="@+id/home_discover"
                         android:layout_height="wrap_content"
                         android:background="@drawable/bg_actionbar_discover"/>
 
                     <ImageView
                         android:layout_width="wrap_content"
+                        android:id="@+id/home_music"
                         android:layout_height="wrap_content"
+                        android:background="@drawable/bg_actionbar_music"/>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/home_friend"
                         android:background="@drawable/actionbar_friends_normal"/>
 
                 </LinearLayout>
