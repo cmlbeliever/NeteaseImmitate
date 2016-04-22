@@ -1,5 +1,6 @@
 package com.cml.imitate.netease.modules.container;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,6 +18,8 @@ import android.view.WindowManager;
 import com.cml.imitate.netease.R;
 import com.cml.imitate.netease.modules.BaseActivity;
 import com.cml.imitate.netease.modules.main.MainFragment;
+import com.cml.imitate.netease.service.MusicService;
+import com.cml.imitate.netease.utils.pref.PrefUtil;
 import com.cml.second.app.common.widget.menu.NavigationMenuView;
 
 import java.util.ArrayList;
@@ -59,6 +62,10 @@ public class ContainerActivity extends BaseActivity implements ContainerContract
         }
 
         setContentView(R.layout.activity_main);
+
+        //TODO
+        PrefUtil.setIsFrontService(true);
+        startService(new Intent(this, MusicService.class));
 
 //        //TODO 期待更好的方法，直接使用style就能解决
 //        ViewCompat.setOnApplyWindowInsetsListener(getWindow().getDecorView(),
