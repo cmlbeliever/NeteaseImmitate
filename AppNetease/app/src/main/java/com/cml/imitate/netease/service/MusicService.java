@@ -30,7 +30,7 @@ public class MusicService extends Service {
         //TODO 1 显示notification
         //如果允许显示通知栏，添加通知栏
         if (PrefUtil.getIsFrontService()) {
-            Intent intent = NotificationReceiver.getPlayMusicIntent(new PlayMusicBean(NOTIFICATION_ID, "url", "name", "author", true, true));
+            Intent intent = NotificationReceiver.getPlayMusicIntent(new PlayMusicBean(NOTIFICATION_ID, "url", "name", "author", false, true));
             sendBroadcast(intent);
         }
     }
