@@ -3,6 +3,7 @@ package com.cml.imitate.netease.receiver;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.widget.Toast;
 
 import com.cml.imitate.netease.notification.PlayMusicNotification;
 import com.cml.imitate.netease.receiver.bean.PlayMusicBean;
@@ -19,10 +20,13 @@ public class NotificationReceiver extends BroadcastReceiver {
     public static final String EXTRA_KEY_TYPE = "notificationreceiver.key.type";
     public static final String EXTRA_KEY_DATA = "notificationreceiver.key.data";
     public static final String ACTION_PLAY_MUSIC = "com.cml.imitate.netease.receiver.notificationreceiver.playmusic";
+    public static final String ACTION_PLAY_MUSIC2 = "com.cml.imitate.netease.receiver.notificationreceiver.playmusic";
 
 
     @Override
     public void onReceive(Context context, Intent intent) {
+
+        Toast.makeText(context,"receiver:"+intent.getAction(),Toast.LENGTH_LONG).show();
 
         KLog.d(TAG, "NotificationReceiver=====>" + intent.getAction());
 

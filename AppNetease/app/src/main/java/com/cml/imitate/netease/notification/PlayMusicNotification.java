@@ -3,15 +3,14 @@ package com.cml.imitate.netease.notification;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.widget.RemoteViews;
 
-import com.cml.imitate.netease.MainActivity;
 import com.cml.imitate.netease.R;
+import com.cml.imitate.netease.modules.container.ContainerActivity;
 import com.cml.imitate.netease.receiver.bean.PlayMusicBean;
 
 /**
@@ -28,15 +27,35 @@ public class PlayMusicNotification {
         this.context = context;
     }
 
+    //    public void initNotification(PlayMusicBean bean) {
+//
+//        RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.notification_play);
+//        remoteViews.setImageViewResource(R.id.notify_icon, R.mipmap.ic_launcher);
+//        remoteViews.setTextViewText(R.id.notify_song_name, bean.name);
+//        remoteViews.setTextViewText(R.id.notify_song_author, bean.author);
+//        //播放暂停键
+//        remoteViews.setImageViewResource(R.id.notify_btn_play_ctrl, bean.isPlay ? R.drawable.play_btn_play : R.drawable.play_btn_pause);
+//        remoteViews.setImageViewResource(R.id.notify_btn_lrc, bean.showLrc ? R.drawable.actionbar_menu_icn_lrc : R.drawable.actionbar_menu_icn_lrc_dis);
+//        remoteViews.setOnClickPendingIntent(R.id.notify_container, PendingIntent.getActivity(context, 11, new Intent(context, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT));
+//
+//        Intent resultIntent = new Intent(NotificationReceiver.ACTION_PLAY_MUSIC2);
+//        notification = new Notification();
+//        notification.contentView = remoteViews;
+//        notification.contentIntent = PendingIntent.getBroadcast(context, 1, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+//        notification.when = System.currentTimeMillis();
+//        notification.flags = Notification.FLAG_ONGOING_EVENT;
+//        notification.icon = R.drawable.ic_menu_camera;
+//
+//    }
     public void initNotification(PlayMusicBean bean) {
-        Intent resultIntent = Intent.makeMainActivity(new ComponentName(context, MainActivity.class));
-        resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        Intent resultIntent = new Intent(context, ContainerActivity.class);
+        resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
         // Adds the Intent to the top of the stack
         stackBuilder.addNextIntent(resultIntent);
+        stackBuilder.addNextIntent(resultIntent);
         // Gets a PendingIntent containing the entire back stack
-        PendingIntent resultPendingIntent =
-                stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(10, PendingIntent.FLAG_UPDATE_CURRENT);
 
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.notification_play);
         remoteViews.setImageViewResource(R.id.notify_icon, R.mipmap.ic_launcher);
@@ -52,14 +71,7 @@ public class PlayMusicNotification {
         builder.setSmallIcon(R.drawable.ic_menu_camera);
         builder.setAutoCancel(false);
         builder.setOngoing(true);
-//        builder.setColor(Color.RED);
         notification = builder.build();
-//        notification.contentIntent = resultPendingIntent;
-
-//        notification=new Notification();
-//        notification.contentView=remoteViews;
-//        notification.contentIntent=resultPendingIntent;
-//        notification.tickerText="sdf";
     }
 
     public void show() {
