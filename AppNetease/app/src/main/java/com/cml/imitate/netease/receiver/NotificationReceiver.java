@@ -20,13 +20,12 @@ public class NotificationReceiver extends BroadcastReceiver {
     public static final String EXTRA_KEY_TYPE = "notificationreceiver.key.type";
     public static final String EXTRA_KEY_DATA = "notificationreceiver.key.data";
     public static final String ACTION_PLAY_MUSIC = "com.cml.imitate.netease.receiver.notificationreceiver.playmusic";
-    public static final String ACTION_PLAY_MUSIC2 = "com.cml.imitate.netease.receiver.notificationreceiver.playmusic";
 
 
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        Toast.makeText(context,"receiver:"+intent.getAction(),Toast.LENGTH_LONG).show();
+        Toast.makeText(context, "receiver:" + intent.getAction(), Toast.LENGTH_LONG).show();
 
         KLog.d(TAG, "NotificationReceiver=====>" + intent.getAction());
 
@@ -34,6 +33,12 @@ public class NotificationReceiver extends BroadcastReceiver {
             case ACTION_PLAY_MUSIC://显示音乐播放的通知
                 PlayMusicBean bean = (PlayMusicBean) intent.getSerializableExtra(EXTRA_KEY_DATA);
                 PlayMusicNotification notification = new PlayMusicNotification(bean.notifyId, context);
+                //删除通知栏信息
+                if (!bean.visible) {
+                    notification.delete();
+                    break;
+                }
+
                 notification.initNotification(bean);
                 notification.show();
                 break;
@@ -51,4 +56,5 @@ public class NotificationReceiver extends BroadcastReceiver {
         intent.putExtra(EXTRA_KEY_DATA, bean);
         return intent;
     }
+
 }
