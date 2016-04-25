@@ -9,8 +9,8 @@ import android.content.Context;
  */
 public abstract class NeteaseNotification<T> {
 
-    private Context context;
-    private int notifyId;
+    protected Context context;
+    protected int notifyId;
     protected Notification notification;
 
     public NeteaseNotification(Context context, int notifyId) {
@@ -27,6 +27,15 @@ public abstract class NeteaseNotification<T> {
 
     protected NotificationManager getNotificationManager() {
         return (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+    }
+
+    /**
+     * 判断是否已经初始化
+     *
+     * @return true 已经初始化 else false
+     */
+    public boolean isInit() {
+        return null != notification;
     }
 
 
