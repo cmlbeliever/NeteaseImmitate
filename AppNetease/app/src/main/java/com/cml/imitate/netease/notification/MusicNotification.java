@@ -44,7 +44,7 @@ public class MusicNotification extends NeteaseNotification<PlayMusicBean> {
         ctrlBean.isPlay = !bean.isPlay;//点击按钮触发相反事件
         Intent playCtrlIntent = new Intent(MusicService.MusicServiceReceiver.ACTION);
         playCtrlIntent.putExtra(MusicService.MusicServiceReceiver.EXTRA_DATA, ctrlBean);
-        remoteViews.setOnClickPendingIntent(R.id.notify_btn_play_ctrl, PendingIntent.getBroadcast(context, notifyId, playCtrlIntent, PendingIntent.FLAG_UPDATE_CURRENT));
+        remoteViews.setOnClickPendingIntent(R.id.notify_btn_play_ctrl, PendingIntent.getBroadcast(context, notifyId * 10, playCtrlIntent, PendingIntent.FLAG_UPDATE_CURRENT));
 
         // TODO 点击下一首触发事件
 
@@ -52,8 +52,8 @@ public class MusicNotification extends NeteaseNotification<PlayMusicBean> {
         PlayMusicBean delBean = PlayMusicBean.cloneBean(bean);
         delBean.visible = false;
         Intent delIntent = new Intent(MusicService.MusicServiceReceiver.ACTION);
-        delIntent.putExtra(MusicService.MusicServiceReceiver.EXTRA_DATA, delIntent);
-        remoteViews.setOnClickPendingIntent(R.id.notify_btn_del, PendingIntent.getBroadcast(context, notifyId, delIntent, PendingIntent.FLAG_UPDATE_CURRENT));
+        delIntent.putExtra(MusicService.MusicServiceReceiver.EXTRA_DATA, delBean);
+        remoteViews.setOnClickPendingIntent(R.id.notify_btn_del, PendingIntent.getBroadcast(context, notifyId * 100, delIntent, PendingIntent.FLAG_UPDATE_CURRENT));
 
         //第一次初始化notification
         if (!isInit()) {

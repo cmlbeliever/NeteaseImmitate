@@ -1,5 +1,7 @@
 package com.cml.imitate.netease.receiver.bean;
 
+import android.os.Bundle;
+
 import java.io.Serializable;
 
 /**
@@ -36,7 +38,21 @@ public class PlayMusicBean implements Serializable {
         this.showLrc = showLrc;
     }
 
+    public static Bundle toBundle(PlayMusicBean src) {
+        Bundle bundle = new Bundle();
+        bundle.putInt("notifyId", src.notifyId);
+        bundle.putString("iconUrl", src.iconUrl);
+        bundle.putString("name", src.name);
+        bundle.putString("author", src.author);
+        bundle.putBoolean("isPlay", src.isPlay);
+        bundle.putBoolean("showLrc", src.showLrc);
+        bundle.putBoolean("visible", src.visible);
+        return bundle;
+    }
+
     public static PlayMusicBean cloneBean(PlayMusicBean src) {
         return new PlayMusicBean(src.notifyId, src.iconUrl, src.name, src.author, src.isPlay, src.showLrc);
     }
+
+
 }
