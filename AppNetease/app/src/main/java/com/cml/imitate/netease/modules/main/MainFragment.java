@@ -58,7 +58,7 @@ public class MainFragment extends BaseFragment implements MainContract.View {
     private void initViewPager() {
         List<Fragment> fragments=new ArrayList<Fragment>(3);
         fragments.add(SuggestionFragment.getInstance());
-        fragments.add(SetListFragment.getInstance());
+        fragments.add(LocalSetlistFragment.getInstance());
         fragments.add(FriendFragment.getInstance());
 
         pagerAdapter=new MainFragmentAdapter(getFragmentManager(),fragments);
