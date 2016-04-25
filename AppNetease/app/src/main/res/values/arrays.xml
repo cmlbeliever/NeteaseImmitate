@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="title_suggestion">
+        <item>个性推荐</item>
+        <item>歌单</item>
+        <item>主播电台</item>
+        <item>排行榜</item>
+    </string-array>
+</resources>

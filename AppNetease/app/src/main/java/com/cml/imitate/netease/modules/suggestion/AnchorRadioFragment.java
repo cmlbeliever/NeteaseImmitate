@@ -5,11 +5,11 @@ import com.cml.imitate.netease.modules.BaseFragment;
 
 /**
  * Created by cmlBeliever on 2016/4/25.
- * 个性推荐
+ * 主播电台
  */
-public class PersonalSuggestionFragment  extends BaseFragment{
+public class AnchorRadioFragment extends BaseFragment{
     @Override
     protected int getContainerRes() {
-        return R.layout.fragment_personal_suggestion;
+        return R.layout.fragment_anchor_radio;
     }
 }
