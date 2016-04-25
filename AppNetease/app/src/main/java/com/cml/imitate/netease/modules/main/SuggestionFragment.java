@@ -13,6 +13,7 @@ import com.cml.imitate.netease.modules.suggestion.AnchorRadioFragment;
 import com.cml.imitate.netease.modules.suggestion.PersonalSuggestionFragment;
 import com.cml.imitate.netease.modules.suggestion.RankFragment;
 import com.cml.imitate.netease.modules.suggestion.SetListFragment;
+import com.socks.library.KLog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +43,22 @@ public class SuggestionFragment extends BaseFragment {
         pages.add(RankFragment.class);
 
         viewPager.setAdapter(new SuggestionAdapter(getFragmentManager(), getActivity(), pages));
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                KLog.e("ssss", "position:" + position + ",positionOffset:" + positionOffset + ",positionOffsetPixels:" + positionOffsetPixels);
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
 
         tabLayout.setupWithViewPager(viewPager);
     }
