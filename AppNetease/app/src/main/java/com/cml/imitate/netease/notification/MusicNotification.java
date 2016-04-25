@@ -9,8 +9,8 @@ import android.widget.RemoteViews;
 
 import com.cml.imitate.netease.R;
 import com.cml.imitate.netease.modules.container.ContainerActivity;
+import com.cml.imitate.netease.receiver.MusicServiceReceiver;
 import com.cml.imitate.netease.receiver.bean.PlayMusicBean;
-import com.cml.imitate.netease.service.MusicService;
 
 /**
  * Created by cmlBeliever on 2016/4/25.
@@ -42,8 +42,8 @@ public class MusicNotification extends NeteaseNotification<PlayMusicBean> {
         //TODO 播放暂停按键触发事件
         PlayMusicBean ctrlBean = PlayMusicBean.cloneBean(bean);
         ctrlBean.isPlay = !bean.isPlay;//点击按钮触发相反事件
-        Intent playCtrlIntent = new Intent(MusicService.MusicServiceReceiver.ACTION);
-        playCtrlIntent.putExtra(MusicService.MusicServiceReceiver.EXTRA_DATA, ctrlBean);
+        Intent playCtrlIntent = new Intent(MusicServiceReceiver.ACTION);
+        playCtrlIntent.putExtra(MusicServiceReceiver.EXTRA_DATA, ctrlBean);
         remoteViews.setOnClickPendingIntent(R.id.notify_btn_play_ctrl, PendingIntent.getBroadcast(context, notifyId * 10, playCtrlIntent, PendingIntent.FLAG_UPDATE_CURRENT));
 
         // TODO 点击下一首触发事件
@@ -51,8 +51,8 @@ public class MusicNotification extends NeteaseNotification<PlayMusicBean> {
         //TODO 点击删除按钮事件
         PlayMusicBean delBean = PlayMusicBean.cloneBean(bean);
         delBean.visible = false;
-        Intent delIntent = new Intent(MusicService.MusicServiceReceiver.ACTION);
-        delIntent.putExtra(MusicService.MusicServiceReceiver.EXTRA_DATA, delBean);
+        Intent delIntent = new Intent(MusicServiceReceiver.ACTION);
+        delIntent.putExtra(MusicServiceReceiver.EXTRA_DATA, delBean);
         remoteViews.setOnClickPendingIntent(R.id.notify_btn_del, PendingIntent.getBroadcast(context, notifyId * 100, delIntent, PendingIntent.FLAG_UPDATE_CURRENT));
 
         //第一次初始化notification
