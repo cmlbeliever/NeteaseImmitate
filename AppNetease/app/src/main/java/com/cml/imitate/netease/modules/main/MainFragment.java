@@ -26,7 +26,7 @@ public class MainFragment extends BaseFragment implements MainContract.View {
 
     private MainContract.Presenter presenter;
     @Bind(R.id.home_viewpager)
-     ViewPager homeViewPager;
+    ViewPager homeViewPager;
 
 //    @Bind(R.id.home_discover)
 //    View discoverView;
@@ -35,7 +35,7 @@ public class MainFragment extends BaseFragment implements MainContract.View {
 //    @Bind(R.id.home_friend)
 //    View friendView;
 
-    @Bind({R.id.home_discover,R.id.home_music,R.id.home_friend})
+    @Bind({R.id.home_discover, R.id.home_music, R.id.home_friend})
     List<View> toolbarViews;
 
     private FragmentPagerAdapter pagerAdapter;
@@ -49,19 +49,19 @@ public class MainFragment extends BaseFragment implements MainContract.View {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         //设置viewpager
-          initViewPager();
+        initViewPager();
     }
 
     /**
      * 设置viewpager
      */
     private void initViewPager() {
-        List<Fragment> fragments=new ArrayList<Fragment>(3);
+        List<Fragment> fragments = new ArrayList<Fragment>(3);
         fragments.add(SuggestionFragment.getInstance());
         fragments.add(LocalSetlistFragment.getInstance());
         fragments.add(FriendFragment.getInstance());
 
-        pagerAdapter=new MainFragmentAdapter(getFragmentManager(),fragments);
+        pagerAdapter = new MainFragmentAdapter(getFragmentManager(), fragments);
         homeViewPager.setAdapter(pagerAdapter);
         homeViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override

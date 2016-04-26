@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.socks.library.KLog;
+
 import butterknife.ButterKnife;
 
 /**
@@ -15,6 +17,12 @@ import butterknife.ButterKnife;
 public abstract class BaseFragment extends Fragment {
 
     public static final String TAG = BaseFragment.class.getSimpleName();
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        KLog.d(TAG, "oncreate=====>" + getClass().getSimpleName());
+    }
 
     @Nullable
     @Override
