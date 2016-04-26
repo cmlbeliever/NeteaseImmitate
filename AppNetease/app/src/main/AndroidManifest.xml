@@ -21,15 +21,14 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".modules.local.MusicScannerActivity"
+            android:launchMode="singleTask"/>
+
         <service
             android:name=".service.MusicService"
             android:process=":remote"/>
 
-        <receiver android:name=".receiver.NotificationReceiver">
-            <intent-filter>
-                <action android:name="com.cml.imitate.netease.receiver.notificationreceiver.playmusic"/>
-            </intent-filter>
-        </receiver>
     </application>
 
 </manifest>
