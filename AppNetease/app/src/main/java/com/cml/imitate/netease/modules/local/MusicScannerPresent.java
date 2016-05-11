@@ -24,12 +24,12 @@ public class MusicScannerPresent implements MusicScannerContract.Present {
 
     @Override
     public void scan(Context context) {
-
-        Toast.makeText(context,"scann",Toast.LENGTH_LONG).show();
+        view.startScanAnim();
+        Toast.makeText(context, "scann", Toast.LENGTH_LONG).show();
 
         Cursor cursor = context.getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null, null, null, MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
 
-        KLog.d(TAG, "==============>scann===>"+cursor);
+        KLog.d(TAG, "==============>scann===>" + cursor);
 
         if (null == cursor) {
             view.updateScannerResult("共扫描到0首歌曲");

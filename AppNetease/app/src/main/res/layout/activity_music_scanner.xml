@@ -25,11 +25,19 @@
             android:src="@drawable/local_scan_mobile"/>
 
         <ImageView
+            android:id="@+id/scan_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="80dp"
             android:background="@drawable/local_scan_bg"/>
+
+        <ImageView
+            android:id="@+id/scan_effect_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/local_scan_down"/>
     </RelativeLayout>
 
 
@@ -48,8 +56,8 @@
         android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:layout_marginTop="@dimen/activity_vertical_margin"
         android:background="@drawable/local_btn_mymusic"
-        android:gravity="center"
         android:clickable="true"
+        android:gravity="center"
         android:paddingBottom="8dp"
         android:paddingTop="8dp"
         android:text="回到我的音乐"
@@ -57,13 +65,13 @@
         android:textSize="18sp"/>
 
     <TextView
-        android:clickable="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:layout_marginTop="@dimen/activity_vertical_margin"
         android:background="@drawable/local_btn_lrc_get"
+        android:clickable="true"
         android:gravity="center"
         android:paddingBottom="8dp"
         android:paddingTop="8dp"

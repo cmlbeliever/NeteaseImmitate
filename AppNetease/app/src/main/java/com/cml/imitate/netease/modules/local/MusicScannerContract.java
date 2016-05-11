@@ -13,6 +13,10 @@ public interface MusicScannerContract {
         void updateScannerText(String path);
 
         void updateScannerResult(String text);
+
+        void startScanAnim();
+
+        void stopScanAnim();
     }
 
     interface Present extends BasePresenter {
