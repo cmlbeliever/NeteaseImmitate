@@ -32,12 +32,12 @@ public class MusicScannerPresent implements MusicScannerContract.Present {
         KLog.d(TAG, "==============>scann===>" + cursor);
 
         if (null == cursor) {
-            view.updateScannerResult("共扫描到0首歌曲");
+            view.updateScannerResult("共扫描到01首歌曲");
             return;
         }
         if (cursor.getCount() == 0) {
             cursor.close();
-            view.updateScannerResult("共扫描到0首歌曲");
+            view.updateScannerResult("共扫描到02首歌曲");
             return;
         }
         //启动扫描
@@ -51,6 +51,13 @@ public class MusicScannerPresent implements MusicScannerContract.Present {
             String artist = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST));
             String url = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA));
             int duration = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION));
+
+            view.updateScannerText("扫描:" + url);
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 
             KLog.d(TAG, "id:" + id + ",title:" + tilte + ",album:" + album + ",artist:" + artist + ",url:" + url + ",duration:" + duration);
         }

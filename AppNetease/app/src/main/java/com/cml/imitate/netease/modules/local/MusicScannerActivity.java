@@ -11,6 +11,7 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.cml.imitate.netease.R;
 import com.cml.imitate.netease.modules.BaseActivity;
@@ -31,6 +32,9 @@ public class MusicScannerActivity extends BaseActivity implements MusicScannerCo
     @Bind(R.id.scan_effect_icon)
     ImageView scanEffectImageView;//扫描效果图片
 
+    @Bind(R.id.scan_result_txt)
+    TextView scanResultTextView;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,12 +48,12 @@ public class MusicScannerActivity extends BaseActivity implements MusicScannerCo
 
     @Override
     public void updateScannerText(String path) {
-
+        scanResultTextView.setText(path);
     }
 
     @Override
     public void updateScannerResult(String text) {
-
+        scanResultTextView.setText(text);
     }
 
     @Override
