@@ -2,6 +2,8 @@
 <manifest package="com.cml.imitate.netease"
           xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+
     <application
         android:name=".application.AppApplication"
         android:allowBackup="true"
@@ -23,6 +25,7 @@
 
         <activity
             android:name=".modules.local.MusicScannerActivity"
+            android:theme="@style/AppTheme.NoActionBar.Common"
             android:launchMode="singleTask"/>
 
         <service
