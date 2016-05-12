@@ -84,11 +84,11 @@ public class MusicScannerActivity extends BaseActivity implements MusicScannerCo
         animator.addListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
-
             }
 
             @Override
             public void onAnimationEnd(Animator animation) {
+                scanImageView.setSelected(true);
                 scanImageView.setTranslationX(0);
                 scanImageView.setTranslationY(0);
             }
