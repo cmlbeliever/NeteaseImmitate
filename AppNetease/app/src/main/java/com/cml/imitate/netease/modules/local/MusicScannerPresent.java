@@ -75,6 +75,11 @@ public class MusicScannerPresent implements MusicScannerContract.Present {
             @Override
             public void call(Subscriber<? super Cursor> subscriber) {
                 if (!subscriber.isUnsubscribed()) {
+                    try {
+                        Thread.sleep(5000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                     Cursor cursor = context.getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null, null, null, MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
                     subscriber.onNext(cursor);
                     subscriber.onCompleted();
