@@ -39,4 +39,5 @@ dependencies {
     compile 'io.reactivex:rxjava:1.0.15'
 
     compile project(':commonlib')
+    compile project(':Database')
 }

@@ -3,6 +3,7 @@ package com.cml.imitate.netease.modules.local;
 import android.animation.Animator;
 import android.animation.FloatEvaluator;
 import android.animation.ValueAnimator;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
@@ -35,6 +36,8 @@ public class MusicScannerActivity extends BaseActivity implements MusicScannerCo
     @Bind(R.id.scan_result_txt)
     TextView scanResultTextView;
 
+    private ValueAnimator animator;//放大镜动画
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,9 +59,10 @@ public class MusicScannerActivity extends BaseActivity implements MusicScannerCo
         scanResultTextView.setText(text);
     }
 
+
     @Override
     public void startScanAnim() {
-        ValueAnimator animator = ValueAnimator.ofFloat(360, 0);
+        animator = ValueAnimator.ofFloat(360, 0);
         animator.setDuration(50000);
         animator.setEvaluator(new FloatEvaluator());
         animator.setRepeatCount(-1);
@@ -135,7 +139,16 @@ public class MusicScannerActivity extends BaseActivity implements MusicScannerCo
 
     @Override
     public void stopScanAnim() {
+        scanEffectImageView.clearAnimation();
+        scanEffectImageView.setVisibility(View.GONE);
+        if (null != animator && animator.isRunning()) {
+            animator.end();
+        }
+    }
 
+    @Override
+    public Context getContext() {
+        return this;
     }
 
     @Override

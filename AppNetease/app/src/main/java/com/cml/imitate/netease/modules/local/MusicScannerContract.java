@@ -17,6 +17,8 @@ public interface MusicScannerContract {
         void startScanAnim();
 
         void stopScanAnim();
+
+        Context getContext();
     }
 
     interface Present extends BasePresenter {
