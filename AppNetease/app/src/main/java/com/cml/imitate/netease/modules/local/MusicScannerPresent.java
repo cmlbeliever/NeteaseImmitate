@@ -71,6 +71,7 @@ public class MusicScannerPresent implements MusicScannerContract.Present {
         //启动扫描
         isRunning = true;
 
+
         Observable.create(new Observable.OnSubscribe<Cursor>() {
             @Override
             public void call(Subscriber<? super Cursor> subscriber) {
