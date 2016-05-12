@@ -6,6 +6,7 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.Html;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
@@ -19,6 +20,7 @@ import com.cml.imitate.netease.modules.BaseActivity;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by cmlBeliever on 2016/4/26.
@@ -48,15 +50,21 @@ public class MusicScannerActivity extends BaseActivity implements MusicScannerCo
         present.scan(this);
     }
 
+    @OnClick(R.id.scan_btn_close)
+    public void onCloseClicked(View view) {
+        stopScanAnim();
+        present.unsubscribe();
+        finish();
+    }
 
     @Override
     public void updateScannerText(String path) {
-        scanResultTextView.setText(path);
+        scanResultTextView.setText(Html.fromHtml(path));
     }
 
     @Override
     public void updateScannerResult(String text) {
-        scanResultTextView.setText(text);
+        scanResultTextView.setText(Html.fromHtml(text));
     }
 
 
@@ -145,6 +153,7 @@ public class MusicScannerActivity extends BaseActivity implements MusicScannerCo
             animator.end();
         }
     }
+
 
     @Override
     public Context getContext() {

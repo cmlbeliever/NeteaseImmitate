@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.provider.MediaStore;
 
+import com.cml.imitate.netease.R;
 import com.cml.imitate.netease.db.SongDbClient;
 import com.cml.imitate.netease.db.bean.Song;
 import com.socks.library.KLog;
@@ -99,7 +100,7 @@ public class MusicScannerPresent implements MusicScannerContract.Present {
                         //插入db信息
                         dbClient.replaceSong(song);
                         //通知界面显示
-                        scanResultSubject.onNext(song.toString());
+                        scanResultSubject.onNext(song.url);
 
                         KLog.d(TAG, song);
                     }
@@ -122,7 +123,7 @@ public class MusicScannerPresent implements MusicScannerContract.Present {
             @Override
             public void onNext(List<Song> songs) {
                 //通知界面显示
-                scanResultSubject.onNext("共扫描到：" + Thread.currentThread().getId() + "," + songs.size());
+                scanResultSubject.onNext(context.getResources().getString(R.string.local_scan_finish, songs.size()));
             }
         });
     }
@@ -134,6 +135,6 @@ public class MusicScannerPresent implements MusicScannerContract.Present {
 
     @Override
     public void unsubscribe() {
-
+        isRunning = false;
     }
 }
