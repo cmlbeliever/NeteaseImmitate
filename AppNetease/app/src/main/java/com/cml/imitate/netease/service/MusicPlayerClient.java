@@ -22,7 +22,7 @@ public class MusicPlayerClient {
 
     public void play(Uri uri) {
         //重新播放
-        if (null != player && null == uri) {
+        if (null != player && !player.isPlaying()) {
             player.start();
             return;
         }

@@ -52,10 +52,11 @@ public class ContainerPresenter implements ContainerContract.Presenter {
             //TODO
             SongDbClient client = new SongDbClient(context);
             List<Song> songs = client.query();
-            String url = songs.get(2).url;
+            String url = songs.get(3).url;
 
             Message msg = Message.obtain();
             msg.obj = Uri.fromFile(new File(url));
+            msg.what = MusicService.ControlCode.PLAY;
             try {
                 msg.replyTo = serviceMessenger;
                 sendMessenger.send(msg);

@@ -105,7 +105,7 @@ public class ContainerActivity extends BaseActivity implements ContainerContract
     public void onPlayBarItemClicked(View v) {
         switch (v.getId()) {
             case R.id.playbar_play_ctrl:
-//                v.setSelected(!v.isSelected()); TODO 根据状态设置
+                v.setSelected(!v.isSelected()); //TODO 根据状态设置
                 if (v.isSelected()) {//暂停
                     presenter.play();
                 } else {
