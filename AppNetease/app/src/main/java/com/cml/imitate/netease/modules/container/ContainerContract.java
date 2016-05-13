@@ -1,5 +1,7 @@
 package com.cml.imitate.netease.modules.container;
 
+import android.content.Context;
+import android.net.Uri;
 import android.support.v4.app.Fragment;
 
 import com.cml.imitate.netease.modules.BasePresenter;
@@ -24,6 +26,14 @@ public interface ContainerContract {
     }
 
     interface Presenter extends BasePresenter {
+        void playMusic(Context context, Uri uri);
 
+        void bindService();
+
+        void play();
+
+        void next();
+
+        void pause();
     }
 }

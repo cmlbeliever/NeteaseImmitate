@@ -14,13 +14,19 @@ import java.io.IOException;
  */
 public class MusicPlayerClient {
     private Context context;
+    private MediaPlayer player;
 
     public MusicPlayerClient(Context context) {
         this.context = context;
     }
 
     public void play(Uri uri) {
-        MediaPlayer player = new MediaPlayer();
+        //重新播放
+        if (null != player && null == uri) {
+            player.start();
+            return;
+        }
+        player = new MediaPlayer();
         try {
             player.setDataSource(context, uri);
             player.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -45,6 +51,12 @@ public class MusicPlayerClient {
             });
         } catch (IOException e) {
             KLog.e(e);
+        }
+    }
+
+    public void pause() {
+        if (null != player && player.isPlaying()) {
+            player.pause();
         }
     }
 }

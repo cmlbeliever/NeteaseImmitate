@@ -2,9 +2,13 @@ package com.cml.imitate.netease.db;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 
 import com.cml.imitate.netease.db.bean.Song;
 import com.cml.imitate.netease.db.contract.SongContract;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by cmlBeliever on 2016/5/12.
@@ -12,6 +16,21 @@ import com.cml.imitate.netease.db.contract.SongContract;
 public class SongDbClient extends DataBaseClient {
     public SongDbClient(Context context) {
         super(context);
+    }
+
+    public List<Song> query() {
+        List<Song> songs = new ArrayList<Song>();
+        Cursor cursor = helper.getWritableDatabase().query(SongContract.TABLE, null, null, null, null, null, null);
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                Song song = new Song();
+                song.name = cursor.getString(cursor.getColumnIndex(SongContract.Columns.NAME));
+                song.url = cursor.getString(cursor.getColumnIndex(SongContract.Columns.URL));
+                songs.add(song);
+            }
+            cursor.close();
+        }
+        return songs;
     }
 
     public long replaceSong(Song song) {

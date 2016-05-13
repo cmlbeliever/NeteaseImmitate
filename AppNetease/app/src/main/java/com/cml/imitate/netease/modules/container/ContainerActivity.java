@@ -71,8 +71,17 @@ public class ContainerActivity extends BaseActivity implements ContainerContract
 //        setupCustomNavigation();
 
         //TODO
-        new ContainerPresenter(this);
+        new ContainerPresenter(this, this);
         setContainer(MainFragment.getInstance());
+
+        //启动或绑定音乐播放器服务
+        presenter.subscribe();
+    }
+
+    @Override
+    protected void onDestroy() {
+        presenter.unsubscribe();
+        super.onDestroy();
     }
 
     @Override
@@ -96,9 +105,11 @@ public class ContainerActivity extends BaseActivity implements ContainerContract
     public void onPlayBarItemClicked(View v) {
         switch (v.getId()) {
             case R.id.playbar_play_ctrl:
-                v.setSelected(!v.isSelected());
-                if (v.isSelected()) {
-
+//                v.setSelected(!v.isSelected()); TODO 根据状态设置
+                if (v.isSelected()) {//暂停
+                    presenter.play();
+                } else {
+                    presenter.pause();
                 }
                 break;
         }

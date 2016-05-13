@@ -83,15 +83,31 @@ public class MusicService extends Service {
     private class MusicHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
-            Messenger target = msg.replyTo;
-            musicPlayerClient.play((Uri) msg.obj);
-            try {
-                target.send(Message.obtain());
-            } catch (RemoteException e) {
-                e.printStackTrace();
+
+            switch (msg.what) {
+                case ControlCode.PLAY://音乐播放
+                    Messenger target = msg.replyTo;
+                    musicPlayerClient.play((Uri) msg.obj);
+                    try {
+                        target.send(Message.obtain());
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+                    KLog.d(TAG, "===handleMessage>>" + msg);
+                    break;
             }
-            KLog.d(TAG, "===handleMessage>>" + msg);
         }
+    }
+
+    public static interface ControlCode {
+        int OK = 1000;
+        int FAIL = 1001;
+        int STOP = 1;
+        int PLAY = 2;
+        int LOOP = 3;
+        int EXIT = 4;
+        int NEXT = 5;
+        int LIST = 6;
     }
 
 }
