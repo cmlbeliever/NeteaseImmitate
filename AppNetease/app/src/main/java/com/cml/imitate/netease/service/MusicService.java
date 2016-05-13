@@ -3,10 +3,12 @@ package com.cml.imitate.netease.service;
 import android.app.Service;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
+import android.os.RemoteException;
 import android.support.annotation.Nullable;
 
 import com.cml.imitate.netease.notification.MusicNotification;
@@ -30,6 +32,7 @@ public class MusicService extends Service {
     private NeteaseNotification<PlayMusicBean> notification;
     private MusicServiceReceiver musicServiceReceiver;
     private PlayMusicBean playMusicBean;
+    private MusicPlayerClient musicPlayerClient;//音乐播放控制器
 
     @Override
     public void onCreate() {
@@ -38,6 +41,9 @@ public class MusicService extends Service {
         //播放音乐notification
         notification = new MusicNotification(this, NOTIFICATION_ID);
         playMusicBean = new PlayMusicBean(NOTIFICATION_ID, "url", "name", "author", false, true);
+
+        //
+        musicPlayerClient = new MusicPlayerClient(this);
 
         //注册广播监听
         musicServiceReceiver = new MusicServiceReceiver(notification);
@@ -78,6 +84,12 @@ public class MusicService extends Service {
         @Override
         public void handleMessage(Message msg) {
             Messenger target = msg.replyTo;
+            musicPlayerClient.play((Uri) msg.obj);
+            try {
+                target.send(Message.obtain());
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
             KLog.d(TAG, "===handleMessage>>" + msg);
         }
     }

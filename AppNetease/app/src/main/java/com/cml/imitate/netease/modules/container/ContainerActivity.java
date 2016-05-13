@@ -21,6 +21,9 @@ import com.cml.second.app.common.widget.menu.NavigationMenuView;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 public class ContainerActivity extends BaseActivity implements ContainerContract.View {
 
     private DrawerLayout drawer;
@@ -36,34 +39,12 @@ public class ContainerActivity extends BaseActivity implements ContainerContract
         setTranslucenteBar();
         setContentView(R.layout.activity_main);
 
+
+        ButterKnife.bind(this);
         //TODO
         PrefUtil.setIsFrontService(true);
         startService(new Intent(this, MusicService.class));
 
-//        //TODO 期待更好的方法，直接使用style就能解决
-//        ViewCompat.setOnApplyWindowInsetsListener(getWindow().getDecorView(),
-//                new android.support.v4.view.OnApplyWindowInsetsListener() {
-//                    @Override
-//                    public WindowInsetsCompat onApplyWindowInsets(View v,
-//                                                                  WindowInsetsCompat insets) {
-//                        KLog.d(TAG, "=====onApplyWindowInsets>>>" + getStatusBarHeight());
-//                        if (toolbar.getTag() == null) {
-//                            toolbar.setTag("true");
-//                            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) toolbar.getLayoutParams();
-//                            params.topMargin = getStatusBarHeight();
-//                            toolbar.requestLayout();
-//                        }
-//
-//                        return insets.consumeSystemWindowInsets();
-//                    }
-//
-//
-//                });
-
-        //设置titlebar
-//        initToolbar();
-//        getSupportActionBar().setDisplayShowTitleEnabled(false);
-//        setCustomTitle(getTitle());
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -110,6 +91,19 @@ public class ContainerActivity extends BaseActivity implements ContainerContract
         }
 
     }
+
+    @OnClick({R.id.playbar_play_ctrl, R.id.playbar_next, R.id.playbar_song_list})
+    public void onPlayBarItemClicked(View v) {
+        switch (v.getId()) {
+            case R.id.playbar_play_ctrl:
+                v.setSelected(!v.isSelected());
+                if (v.isSelected()) {
+
+                }
+                break;
+        }
+    }
+
 
     @Override
     public void setPresenter(ContainerContract.Presenter presenter) {

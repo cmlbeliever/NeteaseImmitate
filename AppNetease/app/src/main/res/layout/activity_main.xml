@@ -13,10 +13,22 @@
          android:layout_width="match_parent"
          android:layout_height="match_parent"/>-->
 
-    <FrameLayout
-        android:id="@+id/container"
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent">
+
+        <FrameLayout
+            android:id="@+id/container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <include
+            layout="@layout/view_play_control"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"/>
+    </RelativeLayout>
 
 
     <com.cml.second.app.common.widget.menu.NavigationMenuView
