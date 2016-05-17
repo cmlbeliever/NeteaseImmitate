@@ -9,15 +9,14 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
-import android.os.RemoteException;
 import android.widget.Toast;
 
-import com.cml.imitate.netease.db.SongDbClient;
+import com.cml.imitate.netease.application.AppApplication;
+import com.cml.imitate.netease.db.SongListDbClient;
 import com.cml.imitate.netease.db.bean.Song;
-import com.cml.imitate.netease.service.MusicPlayerClient;
 import com.cml.imitate.netease.service.MusicService;
+import com.socks.library.KLog;
 
-import java.io.File;
 import java.util.List;
 
 /**
@@ -26,8 +25,8 @@ import java.util.List;
 public class ContainerPresenter implements ContainerContract.Presenter {
 
     private ContainerContract.View homeView;
-    private MusicPlayerClient musicPlayerClient;
     private Context context;
+    private SongListDbClient songListDbClient;
     private Messenger serviceMessenger = new Messenger(new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -42,27 +41,34 @@ public class ContainerPresenter implements ContainerContract.Presenter {
         this.homeView = homeView;
         this.context = context;
         homeView.setPresenter(this);
-        musicPlayerClient = new MusicPlayerClient(context);
+        songListDbClient = new SongListDbClient(context);
     }
+
 
     private ServiceConnection connection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             sendMessenger = new Messenger(service);
-            //TODO
-            SongDbClient client = new SongDbClient(context);
-            List<Song> songs = client.query();
-            String url = songs.get(3).url;
 
-            Message msg = Message.obtain();
-            msg.obj = Uri.fromFile(new File(url));
-            msg.what = MusicService.ControlCode.PLAY;
-            try {
-                msg.replyTo = serviceMessenger;
-                sendMessenger.send(msg);
-            } catch (RemoteException e) {
-                e.printStackTrace();
+            List<Song> songList = songListDbClient.getSongList();
+            KLog.d(AppApplication.TAG, "songlist==>" + songList);
+            if (songList.size() == 0) {
+                songListDbClient.generateSongList(false);
             }
+//            //TODO
+//            SongDbClient client = new SongDbClient(context);
+//            List<Song> songs = client.query();
+//            String url = songs.get(0).url;
+//
+//            Message msg = Message.obtain();
+//            msg.obj = Uri.fromFile(new File(url));
+//            msg.what = MusicService.ControlCode.PLAY;
+//            try {
+//                msg.replyTo = serviceMessenger;
+//                sendMessenger.send(msg);
+//            } catch (RemoteException e) {
+//                e.printStackTrace();
+//            }
         }
 
         @Override
@@ -86,7 +92,6 @@ public class ContainerPresenter implements ContainerContract.Presenter {
 
     @Override
     public void playMusic(Context context, Uri uri) {
-        musicPlayerClient.play(uri);
     }
 
     @Override
@@ -95,7 +100,6 @@ public class ContainerPresenter implements ContainerContract.Presenter {
 
     @Override
     public void play() {
-        musicPlayerClient.play(null);
     }
 
     @Override
@@ -105,6 +109,5 @@ public class ContainerPresenter implements ContainerContract.Presenter {
 
     @Override
     public void pause() {
-        musicPlayerClient.pause();
     }
 }

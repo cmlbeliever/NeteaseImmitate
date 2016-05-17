@@ -7,3 +7,6 @@ CREATE TABLE t_song (
     name        VARCHAR(128),
     duration    INTEGER
 );
+CREATE TABLE t_song_list (
+    _id         INTEGER PRIMARY KEY
+);
