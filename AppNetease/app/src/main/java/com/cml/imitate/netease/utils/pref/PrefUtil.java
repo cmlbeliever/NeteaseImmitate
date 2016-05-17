@@ -12,6 +12,15 @@ public class PrefUtil {
 
     interface Keys {
         String KEY_IS_FRONT_SERVICE = "pref.key.isfrontservice";
+        String KEY_PLAY_MUSIC_ID = "pref.key.music.play.id";
+    }
+
+    public static void setCurrentPlayId(String id) {
+        setPref(Keys.KEY_PLAY_MUSIC_ID, id);
+    }
+
+    public static String getCurrentPlayId() {
+        return getPref(Keys.KEY_PLAY_MUSIC_ID);
     }
 
     public static boolean getIsFrontService() {
@@ -37,6 +46,11 @@ public class PrefUtil {
     public static final void setPref(String key, boolean value) {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
         pref.edit().putBoolean(key, value).commit();
+    }
+
+    public static final void setPref(String key, String value) {
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
+        pref.edit().putString(key, value).commit();
     }
 
     public static final void setPref(String prefName, String key, boolean value) {

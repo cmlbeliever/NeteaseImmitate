@@ -24,33 +24,12 @@ public class SongListDbClient extends DataBaseClient {
      * @param random
      */
     public void generateSongList(boolean random) {
-        List<Song> songs = query();
         //清空播放列表
         helper.getWritableDatabase().delete(SongListContract.TABLE, null, null);
         //生成播放列表
-        try {
-            helper.getWritableDatabase().execSQL("INSERT INTO " + SongListContract.TABLE + "(" + SongListContract._ID + ") SELECT " + SongContract.Columns._ID + "  FROM " + SongContract.TABLE + (random ? " ORDER BY RANDOM()" : ""));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        helper.getWritableDatabase().query(SongListContract.TABLE, null, null, null, null, null, null);
-        getSongList();
+        helper.getWritableDatabase().execSQL("INSERT INTO " + SongListContract.TABLE + "(" + SongListContract._ID + ") SELECT " + SongContract.Columns._ID + "  FROM " + SongContract.TABLE + (random ? " ORDER BY RANDOM()" : ""));
     }
 
-    public List<Song> query() {
-        List<Song> songs = new ArrayList<Song>();
-        Cursor cursor = helper.getWritableDatabase().query(SongContract.TABLE, null, null, null, null, null, null);
-        if (cursor != null) {
-            while (cursor.moveToNext()) {
-                Song song = new Song();
-                song.name = cursor.getString(cursor.getColumnIndex(SongContract.Columns.NAME));
-                song.url = cursor.getString(cursor.getColumnIndex(SongContract.Columns.URL));
-                songs.add(song);
-            }
-            cursor.close();
-        }
-        return songs;
-    }
 
     public List<Song> getSongList() {
         List<Song> songList = new ArrayList<>();
@@ -58,10 +37,7 @@ public class SongListDbClient extends DataBaseClient {
                 null);
         if (null != cursor) {
             while (cursor.moveToNext()) {
-                Song song = new Song();
-                song.name = cursor.getString(cursor.getColumnIndex(SongContract.Columns.NAME));
-                song.url = cursor.getString(cursor.getColumnIndex(SongContract.Columns.URL));
-                songList.add(song);
+                songList.add(SongDbClient.loadFromCursor(cursor));
             }
             cursor.close();
         }

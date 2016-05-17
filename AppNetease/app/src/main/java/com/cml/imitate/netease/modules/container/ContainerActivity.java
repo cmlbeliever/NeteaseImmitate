@@ -10,8 +10,11 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.cml.imitate.netease.R;
+import com.cml.imitate.netease.db.bean.Song;
 import com.cml.imitate.netease.modules.BaseActivity;
 import com.cml.imitate.netease.modules.main.MainFragment;
 import com.cml.imitate.netease.service.MusicService;
@@ -21,6 +24,7 @@ import com.cml.second.app.common.widget.menu.NavigationMenuView;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -30,6 +34,13 @@ public class ContainerActivity extends BaseActivity implements ContainerContract
     private NavigationMenuView menuView;
     private FloatingActionButton floatingActionButton;
     private MenuHelper menuHelper;
+
+    @Bind(R.id.playbar_music_name)
+    TextView playbarNameView;
+    @Bind(R.id.playbar_author)
+    TextView playbarAuthorView;
+    @Bind(R.id.playbar_header_img)
+    ImageView playbarHeaderImageView;
 
     private ContainerContract.Presenter presenter;
 
@@ -89,6 +100,13 @@ public class ContainerActivity extends BaseActivity implements ContainerContract
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.container, target);
         transaction.commit();
+    }
+
+    @Override
+    public void setPlaybar(Song song) {
+        playbarNameView.setText(song.tilte);
+        playbarAuthorView.setText(song.artist);
+        //TODO url
     }
 
     @Override

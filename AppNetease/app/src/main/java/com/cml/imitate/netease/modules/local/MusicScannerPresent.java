@@ -77,7 +77,7 @@ public class MusicScannerPresent implements MusicScannerContract.Present {
             public void call(Subscriber<? super Cursor> subscriber) {
                 if (!subscriber.isUnsubscribed()) {
                     try {
-                        Thread.sleep(5000);
+                        Thread.sleep(2000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }

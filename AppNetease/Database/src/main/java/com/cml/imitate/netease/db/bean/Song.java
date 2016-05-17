@@ -11,6 +11,7 @@ public class Song {
     public String url;
     public String name;
     public int duration;
+    public String author;
 
     public Song() {
     }

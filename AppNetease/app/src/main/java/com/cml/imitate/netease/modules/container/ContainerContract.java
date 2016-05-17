@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 
+import com.cml.imitate.netease.db.bean.Song;
 import com.cml.imitate.netease.modules.BasePresenter;
 import com.cml.imitate.netease.modules.BaseView;
 
@@ -18,6 +19,8 @@ public interface ContainerContract {
          * @param target
          */
         void setContainer(Fragment target);
+
+        void setPlaybar(Song song);
 
         /**
          * 显示或关闭菜单
