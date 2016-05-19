@@ -41,6 +41,8 @@ public class ContainerActivity extends BaseActivity implements ContainerContract
     TextView playbarAuthorView;
     @Bind(R.id.playbar_header_img)
     ImageView playbarHeaderImageView;
+    @Bind(R.id.playbar_play_ctrl)
+    View playbarControlView;
 
     private ContainerContract.Presenter presenter;
 
@@ -110,6 +112,11 @@ public class ContainerActivity extends BaseActivity implements ContainerContract
     }
 
     @Override
+    public void setPlayStatus(boolean play) {
+        playbarControlView.setSelected(play);
+    }
+
+    @Override
     public void toggleMenu() {
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
@@ -123,8 +130,7 @@ public class ContainerActivity extends BaseActivity implements ContainerContract
     public void onPlayBarItemClicked(View v) {
         switch (v.getId()) {
             case R.id.playbar_play_ctrl:
-                v.setSelected(!v.isSelected()); //TODO 根据状态设置
-                if (v.isSelected()) {//暂停
+                if (!v.isSelected()) {//播放
                     presenter.play();
                 } else {
                     presenter.pause();

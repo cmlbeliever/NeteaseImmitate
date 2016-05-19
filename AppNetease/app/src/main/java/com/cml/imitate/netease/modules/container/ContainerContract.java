@@ -22,6 +22,8 @@ public interface ContainerContract {
 
         void setPlaybar(Song song);
 
+        void  setPlayStatus(boolean play);
+
         /**
          * 显示或关闭菜单
          */

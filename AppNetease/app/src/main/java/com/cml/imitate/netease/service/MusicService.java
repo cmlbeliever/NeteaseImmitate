@@ -11,11 +11,13 @@ import android.os.Messenger;
 import android.os.RemoteException;
 import android.support.annotation.Nullable;
 
+import com.cml.imitate.netease.db.bean.Song;
 import com.cml.imitate.netease.notification.MusicNotification;
 import com.cml.imitate.netease.notification.NeteaseNotification;
 import com.cml.imitate.netease.receiver.MusicServiceReceiver;
 import com.cml.imitate.netease.receiver.bean.PlayMusicBean;
 import com.cml.imitate.netease.utils.pref.PrefUtil;
+import com.cml.imitate.netease.utils.songlist.SongListUtil;
 import com.socks.library.KLog;
 
 /**
@@ -83,10 +85,10 @@ public class MusicService extends Service {
     private class MusicHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
-
+            Messenger target = msg.replyTo;
+            Message replayMsg = Message.obtain();
             switch (msg.what) {
                 case ControlCode.PLAY://音乐播放
-                    Messenger target = msg.replyTo;
                     musicPlayerClient.play((Uri) msg.obj);
                     try {
                         target.send(Message.obtain());
@@ -94,6 +96,21 @@ public class MusicService extends Service {
                         e.printStackTrace();
                     }
                     KLog.d(TAG, "===handleMessage>>" + msg);
+                    break;
+                case ControlCode.PLAY_INDEX://根据列表id播放
+                    Song song = SongListUtil.getInstance().getCurrent();
+                    replayMsg.what = ControlCode.PLAY_INDEX;
+                    if (null == song) {
+                        replayMsg.arg1 = ControlCode.FAIL;
+                    } else {
+                        replayMsg.arg1 = ControlCode.OK;
+                        musicPlayerClient.play(Uri.parse(song.url));
+                    }
+                    try {
+                        target.send(replayMsg);
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
                     break;
             }
         }
@@ -104,6 +121,7 @@ public class MusicService extends Service {
         int FAIL = 1001;
         int STOP = 1;
         int PLAY = 2;
+        int PLAY_INDEX = 20;//根据音乐id播放
         int LOOP = 3;
         int EXIT = 4;
         int NEXT = 5;

@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
+import android.os.RemoteException;
 import android.widget.Toast;
 
 import com.cml.imitate.netease.application.AppApplication;
@@ -17,6 +18,7 @@ import com.cml.imitate.netease.db.SongListDbClient;
 import com.cml.imitate.netease.db.bean.Song;
 import com.cml.imitate.netease.service.MusicService;
 import com.cml.imitate.netease.utils.pref.PrefUtil;
+import com.cml.imitate.netease.utils.songlist.SongListUtil;
 import com.socks.library.KLog;
 
 import java.util.List;
@@ -41,6 +43,18 @@ public class ContainerPresenter implements ContainerContract.Presenter {
         public void handleMessage(Message msg) {
             //TODO
             Toast.makeText(context, "回调了", Toast.LENGTH_LONG).show();
+            switch (msg.what) {
+                case MusicService.ControlCode.PLAY_INDEX:
+                    homeView.setPlayStatus(msg.arg1 == MusicService.ControlCode.OK);
+//                    if (msg.arg1 == MusicService.ControlCode.OK) {
+//                        Toast.makeText(context, "播放成功了", Toast.LENGTH_LONG).show();
+//                        //TOOD 设置组航太
+//
+//                    } else {
+//                        Toast.makeText(context, "播放失败了", Toast.LENGTH_LONG).show();
+//                    }
+                    break;
+            }
             super.handleMessage(msg);
         }
     });
@@ -58,7 +72,8 @@ public class ContainerPresenter implements ContainerContract.Presenter {
                 @Override
                 public void call(Subscriber<? super Song> subscriber) {
                     if (!subscriber.isUnsubscribed()) {
-                        subscriber.onNext(songDbClient.query(PrefUtil.getCurrentPlayId()));
+                        subscriber.onNext(SongListUtil.getInstance().getCurrent());
+//                        subscriber.onNext(songDbClient.query(PrefUtil.getCurrentPlayId()));
                         subscriber.onCompleted();
                     }
                 }
@@ -145,6 +160,14 @@ public class ContainerPresenter implements ContainerContract.Presenter {
 
     @Override
     public void play() {
+        Message msg = Message.obtain();
+        msg.what = MusicService.ControlCode.PLAY_INDEX;
+        try {
+            msg.replyTo = serviceMessenger;
+            sendMessenger.send(msg);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
