@@ -29,8 +29,7 @@
             android:launchMode="singleTask"/>
 
         <service
-            android:name=".service.MusicService"
-            android:process=":remote"/>
+            android:name=".service.MusicService"/>
 
     </application>
 

@@ -122,7 +122,7 @@ public class MusicService extends Service {
             switch (msg.what) {
                 case ControlCode.PLAY://音乐播放
                     playMessenger = msg.replyTo;
-                    musicPlayerClient.play((Uri) msg.obj);
+                    musicPlayerClient.play((Uri) msg.obj, true);
                     break;
                 case ControlCode.PLAY_INDEX://根据列表id播放
                     playMessenger = msg.replyTo;
@@ -132,13 +132,17 @@ public class MusicService extends Service {
                         replayMsg.arg1 = ControlCode.FAIL;
                     } else {
                         replayMsg.arg1 = ControlCode.OK;
-                        musicPlayerClient.play(Uri.parse(song.url));
+                        musicPlayerClient.play(Uri.parse(song.url), true);
                     }
                     try {
                         target.send(replayMsg);
                     } catch (RemoteException e) {
                         e.printStackTrace();
                     }
+                    break;
+                case ControlCode.PAUSE://音乐暂停
+                    playMessenger = msg.replyTo;
+                    musicPlayerClient.pause();
                     break;
             }
         }
@@ -148,14 +152,15 @@ public class MusicService extends Service {
         int OK = 1000;
         int FAIL = 1001;
         int STOP = 1;
-        int PLAY = 2;
+        int PAUSE = 2;
+        int PLAY = 3;
         int PLAY_INDEX = 20;//根据音乐id播放
-        int LOOP = 3;
-        int EXIT = 4;
-        int NEXT = 5;
-        int LIST = 6;
-        int COMPLETED = 7;
-        int ERROR = 8;
+        int LOOP = 4;
+        int EXIT = 5;
+        int NEXT = 6;
+        int LIST = 7;
+        int COMPLETED = 8;
+        int ERROR = 9;
     }
 
 }

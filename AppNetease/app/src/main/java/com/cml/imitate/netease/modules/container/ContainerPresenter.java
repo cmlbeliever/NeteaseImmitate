@@ -49,18 +49,19 @@ public class ContainerPresenter implements ContainerContract.Presenter {
                     if (msg.arg1 == MusicService.ControlCode.OK) {
                         //TODO 设置进度条
                         Song song = SongListUtil.getInstance().getCurrent();
+                        homeView.setPlaybar(song);
                         //TODO 设置timeer
                         new ProgressController(song.duration, 24, homeView).start();
                     }
-
-
-//                    if (msg.arg1 == MusicService.ControlCode.OK) {
-//                        Toast.makeText(context, "播放成功了", Toast.LENGTH_LONG).show();
-//                        //TOOD 设置组航太
-//
-//                    } else {
-//                        Toast.makeText(context, "播放失败了", Toast.LENGTH_LONG).show();
-//                    }
+                    break;
+                case MusicService.ControlCode.COMPLETED:
+                    homeView.setPlayStatus(false);
+                    Song song = SongListUtil.getInstance().next();
+                    //播放下一首
+                    if (null != song) {
+                        homeView.setPlaybar(song);
+                        play();
+                    }
                     break;
             }
             super.handleMessage(msg);
@@ -180,10 +181,19 @@ public class ContainerPresenter implements ContainerContract.Presenter {
 
     @Override
     public void next() {
-
+        SongListUtil.getInstance().next();
+        play();
     }
 
     @Override
     public void pause() {
+        Message msg = Message.obtain();
+        msg.what = MusicService.ControlCode.STOP;
+        try {
+            msg.replyTo = serviceMessenger;
+            sendMessenger.send(msg);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 }

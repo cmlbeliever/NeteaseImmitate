@@ -22,12 +22,16 @@ public class MusicPlayerClient {
         this.callback = callback;
     }
 
-    public void play(Uri uri) {
-        //重新播放
-        if (null != player && !player.isPlaying()) {
-            player.start();
-            return;
+    public void play(Uri uri, boolean isOrigin) {
+        if (null != player) {
+            if (isOrigin) {
+                player.release();
+            } else if (!player.isPlaying()) {
+                player.start();
+                return;
+            }
         }
+        //重新播放
         player = new MediaPlayer();
         try {
             player.setDataSource(context, uri);

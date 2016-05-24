@@ -145,6 +145,9 @@ public class ContainerActivity extends BaseActivity implements ContainerContract
                     presenter.pause();
                 }
                 break;
+            case R.id.playbar_next:
+                presenter.next();
+                break;
         }
     }
 
