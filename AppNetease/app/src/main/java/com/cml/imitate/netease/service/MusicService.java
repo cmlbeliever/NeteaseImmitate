@@ -3,6 +3,7 @@ package com.cml.imitate.netease.service;
 import android.app.Service;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.IBinder;
@@ -18,7 +19,6 @@ import com.cml.imitate.netease.receiver.MusicServiceReceiver;
 import com.cml.imitate.netease.receiver.bean.PlayMusicBean;
 import com.cml.imitate.netease.utils.pref.PrefUtil;
 import com.cml.imitate.netease.utils.songlist.SongListUtil;
-import com.socks.library.KLog;
 
 /**
  * Created by cmlBeliever on 2016/4/22.
@@ -29,12 +29,46 @@ public class MusicService extends Service {
     private static final String TAG = MusicService.class.getSimpleName();
 
     private final Messenger messenger = new Messenger(new MusicHandler());
+    private Messenger playMessenger;
     private static final int NOTIFICATION_ID = 1001;
 
     private NeteaseNotification<PlayMusicBean> notification;
     private MusicServiceReceiver musicServiceReceiver;
     private PlayMusicBean playMusicBean;
     private MusicPlayerClient musicPlayerClient;//音乐播放控制器
+
+    /**
+     * 音乐播放信息回调处理
+     */
+    private MusicPlayerClient.MusicCallback musicCallback = new MusicPlayerClient.MusicCallback() {
+        @Override
+        public void onCompletion(MediaPlayer mp) {
+            sendMsg(ControlCode.COMPLETED);
+        }
+
+        @Override
+        public boolean onError(MediaPlayer mp, int what, int extra) {
+            sendMsg(ControlCode.ERROR);
+            return false;
+        }
+
+        @Override
+        public void onPrepared(MediaPlayer mp) {
+            sendMsg(ControlCode.PLAY);
+        }
+
+        private void sendMsg(int what) {
+            Message msg = Message.obtain();
+            if (null != playMessenger) {
+                try {
+                    msg.what = what;
+                    playMessenger.send(msg);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    };
 
     @Override
     public void onCreate() {
@@ -45,7 +79,7 @@ public class MusicService extends Service {
         playMusicBean = new PlayMusicBean(NOTIFICATION_ID, "url", "name", "author", false, true);
 
         //
-        musicPlayerClient = new MusicPlayerClient(this);
+        musicPlayerClient = new MusicPlayerClient(this, musicCallback);
 
         //注册广播监听
         musicServiceReceiver = new MusicServiceReceiver(notification);
@@ -69,8 +103,6 @@ public class MusicService extends Service {
         if (PrefUtil.getIsFrontService()) {
             notification.initOrUpdate(playMusicBean);
             notification.show();
-//            Intent intent = NotificationReceiver.getPlayMusicIntent(new PlayMusicBean(NOTIFICATION_ID, "url", "name", "author", false, true));
-//            sendBroadcast(intent);
         }
 
         return super.onStartCommand(intent, flags, startId);
@@ -89,15 +121,11 @@ public class MusicService extends Service {
             Message replayMsg = Message.obtain();
             switch (msg.what) {
                 case ControlCode.PLAY://音乐播放
+                    playMessenger = msg.replyTo;
                     musicPlayerClient.play((Uri) msg.obj);
-                    try {
-                        target.send(Message.obtain());
-                    } catch (RemoteException e) {
-                        e.printStackTrace();
-                    }
-                    KLog.d(TAG, "===handleMessage>>" + msg);
                     break;
                 case ControlCode.PLAY_INDEX://根据列表id播放
+                    playMessenger = msg.replyTo;
                     Song song = SongListUtil.getInstance().getCurrent();
                     replayMsg.what = ControlCode.PLAY_INDEX;
                     if (null == song) {
@@ -126,6 +154,8 @@ public class MusicService extends Service {
         int EXIT = 4;
         int NEXT = 5;
         int LIST = 6;
+        int COMPLETED = 7;
+        int ERROR = 8;
     }
 
 }

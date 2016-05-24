@@ -15,9 +15,11 @@ import java.io.IOException;
 public class MusicPlayerClient {
     private Context context;
     private MediaPlayer player;
+    private MusicCallback callback;
 
-    public MusicPlayerClient(Context context) {
+    public MusicPlayerClient(Context context, MusicCallback callback) {
         this.context = context;
+        this.callback = callback;
     }
 
     public void play(Uri uri) {
@@ -34,12 +36,18 @@ public class MusicPlayerClient {
                 @Override
                 public void onPrepared(MediaPlayer mp) {
                     mp.start();
+                    if (null != callback) {
+                        callback.onPrepared(mp);
+                    }
                 }
             });
             player.prepareAsync();
             player.setOnErrorListener(new MediaPlayer.OnErrorListener() {
                 @Override
                 public boolean onError(MediaPlayer mp, int what, int extra) {
+                    if (null != callback) {
+                        callback.onError(mp, what, extra);
+                    }
                     return false;
                 }
             });
@@ -47,6 +55,9 @@ public class MusicPlayerClient {
                 @Override
                 public void onCompletion(MediaPlayer mp) {
                     mp.release();
+                    if (null != callback) {
+                        callback.onCompletion(mp);
+                    }
                 }
             });
         } catch (IOException e) {
@@ -58,5 +69,13 @@ public class MusicPlayerClient {
         if (null != player && player.isPlaying()) {
             player.pause();
         }
+    }
+
+    public static interface MusicCallback {
+        void onCompletion(MediaPlayer mp);
+
+        boolean onError(MediaPlayer mp, int what, int extra);
+
+        void onPrepared(MediaPlayer mp);
     }
 }

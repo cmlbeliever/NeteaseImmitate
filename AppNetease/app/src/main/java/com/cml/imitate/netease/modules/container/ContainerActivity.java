@@ -11,6 +11,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.cml.imitate.netease.R;
@@ -43,6 +44,8 @@ public class ContainerActivity extends BaseActivity implements ContainerContract
     ImageView playbarHeaderImageView;
     @Bind(R.id.playbar_play_ctrl)
     View playbarControlView;
+    @Bind(R.id.playbar_progress)
+    ProgressBar playbarProgressView;
 
     private ContainerContract.Presenter presenter;
 
@@ -108,12 +111,18 @@ public class ContainerActivity extends BaseActivity implements ContainerContract
     public void setPlaybar(Song song) {
         playbarNameView.setText(song.tilte);
         playbarAuthorView.setText(song.artist);
+        playbarProgressView.setProgress(0);
         //TODO url
     }
 
     @Override
     public void setPlayStatus(boolean play) {
         playbarControlView.setSelected(play);
+    }
+
+    @Override
+    public void setPlayProgress(int value) {
+        playbarProgressView.setProgress(value);
     }
 
     @Override

@@ -41,11 +41,19 @@ public class ContainerPresenter implements ContainerContract.Presenter {
     private Messenger serviceMessenger = new Messenger(new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            //TODO
             Toast.makeText(context, "回调了", Toast.LENGTH_LONG).show();
             switch (msg.what) {
                 case MusicService.ControlCode.PLAY_INDEX:
                     homeView.setPlayStatus(msg.arg1 == MusicService.ControlCode.OK);
+                    //播放成功
+                    if (msg.arg1 == MusicService.ControlCode.OK) {
+                        //TODO 设置进度条
+                        Song song = SongListUtil.getInstance().getCurrent();
+                        //TODO 设置timeer
+                        new ProgressController(song.duration, 24, homeView).start();
+                    }
+
+
 //                    if (msg.arg1 == MusicService.ControlCode.OK) {
 //                        Toast.makeText(context, "播放成功了", Toast.LENGTH_LONG).show();
 //                        //TOOD 设置组航太

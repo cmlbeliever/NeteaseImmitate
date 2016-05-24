@@ -24,6 +24,8 @@ public interface ContainerContract {
 
         void  setPlayStatus(boolean play);
 
+        void setPlayProgress(int value);
+
         /**
          * 显示或关闭菜单
          */
