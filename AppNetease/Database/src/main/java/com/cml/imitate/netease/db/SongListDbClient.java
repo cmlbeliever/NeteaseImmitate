@@ -44,4 +44,30 @@ public class SongListDbClient extends DataBaseClient {
         return songList;
     }
 
+    public Song next() {
+        Cursor cursor = helper.getWritableDatabase().rawQuery("SELECT ts.* FROM " + SongListContract.TABLE + " tsl INNER JOIN " + SongContract.TABLE + " ts ON ts." + SongContract.Columns._ID + "=tsl." + SongListContract._ID + " WHERE ts.id > 1 limit 1",
+                null);
+        Song song = null;
+        if (null != cursor) {
+            if (cursor.moveToNext()) {
+                song = SongDbClient.loadFromCursor(cursor);
+            }
+            cursor.close();
+        }
+        return song;
+    }
+
+    public Song getPlayingSong() {
+        Cursor cursor = helper.getWritableDatabase().rawQuery("SELECT ts.* FROM " + SongListContract.TABLE + " tsl INNER JOIN " + SongContract.TABLE + " ts ON ts." + SongContract.Columns._ID + "=tsl." + SongListContract._ID + " WHERE ts.status = 1 limit 1",
+                null);
+        Song song = null;
+        if (null != cursor) {
+            if (cursor.moveToNext()) {
+                song = SongDbClient.loadFromCursor(cursor);
+            }
+            cursor.close();
+        }
+        return song;
+    }
+
 }

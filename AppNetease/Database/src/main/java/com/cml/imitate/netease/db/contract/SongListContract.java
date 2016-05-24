@@ -7,4 +7,22 @@ import android.provider.BaseColumns;
  */
 public interface SongListContract extends BaseColumns {
     String TABLE = "t_song_list";
+
+    public static final int STATUS_DEFAULT = 1;
+    public static final int STATUS_PLAY = 2;
+    public static final int STATUS_PLAYING = 3;
+    public static final int STATUS_PAUSE = 4;
+    /**
+     * 1、默认值
+     * 2、当前播放
+     * 3、正在播放
+     * 4、暂停
+     * <p>type:int</p>
+     */
+    String STATUE = "status";
+    /**
+     * 播放的进度
+     * <p>type:int</p>
+     */
+    String POSITION = "play_position";
 }

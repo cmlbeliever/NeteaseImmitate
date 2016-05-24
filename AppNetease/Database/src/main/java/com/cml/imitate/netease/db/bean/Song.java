@@ -12,6 +12,8 @@ public class Song {
     public String name;
     public int duration;
     public String author;
+    public int status;
+    public int position;
 
     public Song() {
     }
@@ -36,6 +38,9 @@ public class Song {
                 ", url='" + url + '\'' +
                 ", name='" + name + '\'' +
                 ", duration=" + duration +
+                ", author='" + author + '\'' +
+                ", status=" + status +
+                ", position=" + position +
                 '}';
     }
 }
