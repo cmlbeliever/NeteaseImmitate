@@ -17,6 +17,8 @@ import com.cml.imitate.netease.db.SongDbClient;
 import com.cml.imitate.netease.db.SongListDbClient;
 import com.cml.imitate.netease.db.bean.Song;
 import com.cml.imitate.netease.service.MusicService;
+import com.cml.imitate.netease.service.aidl.MusicControlCallback;
+import com.cml.imitate.netease.service.aidl.MusicControlService;
 import com.cml.imitate.netease.utils.pref.PrefUtil;
 import com.cml.imitate.netease.utils.songlist.SongListUtil;
 import com.socks.library.KLog;
@@ -38,6 +40,8 @@ public class ContainerPresenter implements ContainerContract.Presenter {
     private Context context;
     private SongListDbClient songListDbClient;
     private SongDbClient songDbClient;
+
+
     private Messenger serviceMessenger = new Messenger(new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -67,7 +71,7 @@ public class ContainerPresenter implements ContainerContract.Presenter {
             super.handleMessage(msg);
         }
     });
-    private Messenger sendMessenger;
+    private MusicControlService controlService;
 
     public ContainerPresenter(final ContainerContract.View homeView, final Context context) {
         this.homeView = homeView;
@@ -98,11 +102,36 @@ public class ContainerPresenter implements ContainerContract.Presenter {
         }
     }
 
+    private Handler callbackHandler = new Handler();
+
+    private MusicControlCallback.Stub callback = new MusicControlCallback.Stub() {
+        @Override
+        public void onControlResult(final int type, int result, int songId) throws RemoteException {
+            KLog.d("===========》onControlResult" + type + "," + result + "," + songId + ",threadid:" + Thread.currentThread().getId());
+            callbackHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    switch (type) {
+                        case MusicService.ControlCode.PREPARED://播放准备完成
+                            homeView.setPlaybar(SongListUtil.getInstance().getCurrent());
+                            break;
+                    }
+                }
+            });
+        }
+    };
+
 
     private ServiceConnection connection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            sendMessenger = new Messenger(service);
+
+            controlService = MusicControlService.Stub.asInterface(service);
+            try {
+                controlService.register(callback);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
 
             List<Song> songList = songListDbClient.getSongList();
             KLog.d(AppApplication.TAG, "songlist==>" + songList);
@@ -169,14 +198,19 @@ public class ContainerPresenter implements ContainerContract.Presenter {
 
     @Override
     public void play() {
-        Message msg = Message.obtain();
-        msg.what = MusicService.ControlCode.PLAY_INDEX;
         try {
-            msg.replyTo = serviceMessenger;
-            sendMessenger.send(msg);
+            controlService.play(SongListUtil.getInstance().getCurrent().id);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
+//        Message msg = Message.obtain();
+//        msg.what = MusicService.ControlCode.PLAY_INDEX;
+//        try {
+//            msg.replyTo = serviceMessenger;
+//            sendMessenger.send(msg);
+//        } catch (RemoteException e) {
+//            e.printStackTrace();
+//        }
     }
 
     @Override
@@ -187,11 +221,8 @@ public class ContainerPresenter implements ContainerContract.Presenter {
 
     @Override
     public void pause() {
-        Message msg = Message.obtain();
-        msg.what = MusicService.ControlCode.STOP;
         try {
-            msg.replyTo = serviceMessenger;
-            sendMessenger.send(msg);
+            controlService.pause();
         } catch (RemoteException e) {
             e.printStackTrace();
         }

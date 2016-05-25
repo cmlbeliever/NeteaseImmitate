@@ -10,8 +10,7 @@ public interface SongListContract extends BaseColumns {
 
     public static final int STATUS_DEFAULT = 1;
     public static final int STATUS_PLAY = 2;
-    public static final int STATUS_PLAYING = 3;
-    public static final int STATUS_PAUSE = 4;
+    public static final int STATUS_PAUSE = 3;
     /**
      * 1、默认值
      * 2、当前播放
@@ -19,7 +18,7 @@ public interface SongListContract extends BaseColumns {
      * 4、暂停
      * <p>type:int</p>
      */
-    String STATUE = "status";
+    String STATUS = "status";
     /**
      * 播放的进度
      * <p>type:int</p>

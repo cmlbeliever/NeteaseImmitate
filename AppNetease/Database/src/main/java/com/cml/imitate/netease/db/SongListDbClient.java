@@ -1,5 +1,6 @@
 package com.cml.imitate.netease.db;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 
@@ -42,6 +43,32 @@ public class SongListDbClient extends DataBaseClient {
             cursor.close();
         }
         return songList;
+    }
+
+    public Song getSong(int status) {
+        Cursor cursor = helper.getWritableDatabase().rawQuery("SELECT ts.* FROM " + SongListContract.TABLE + " tsl INNER JOIN " +
+                        SongContract.TABLE + " ts ON ts." + SongContract.Columns._ID + "=tsl." + SongListContract._ID + " and tsl." + SongListContract.STATUS + "=" + status,
+                null);
+        Song song = null;
+        if (null != cursor) {
+            if (cursor.moveToNext()) {
+                song = SongDbClient.loadFromCursor(cursor);
+            }
+            cursor.close();
+        }
+        return song;
+    }
+
+    public void setPlay(int songId) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(SongListContract.STATUS, SongListContract.STATUS_DEFAULT);
+        //还原设置信息
+        helper.getWritableDatabase().update(SongListContract.TABLE, contentValues, null, new String[]{});
+
+        contentValues.clear();
+        contentValues.put(SongListContract.STATUS, SongListContract.STATUS_PLAY);
+        //设置指定id为状态
+        helper.getWritableDatabase().update(SongListContract.TABLE, contentValues, SongListContract._ID + "=?", new String[]{String.valueOf(songId)});
     }
 
     public Song next() {

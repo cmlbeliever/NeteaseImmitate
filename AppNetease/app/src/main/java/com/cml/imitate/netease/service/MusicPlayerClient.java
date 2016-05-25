@@ -40,6 +40,7 @@ public class MusicPlayerClient {
                 @Override
                 public void onPrepared(MediaPlayer mp) {
                     mp.start();
+                    KLog.d("====>onPrepared:" + Thread.currentThread().getId());
                     if (null != callback) {
                         callback.onPrepared(mp);
                     }

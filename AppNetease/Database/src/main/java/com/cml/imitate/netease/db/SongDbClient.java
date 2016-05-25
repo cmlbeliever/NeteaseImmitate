@@ -18,10 +18,10 @@ public class SongDbClient extends DataBaseClient {
         super(context);
     }
 
-    public Song query(String id) {
+    public Song query(int id) {
         Song song = null;
         Cursor cursor = helper.getWritableDatabase().query(SongContract.TABLE, null, SongContract.Columns._ID + "=?",
-                new String[]{id}, null, null, null);
+                new String[]{String.valueOf(id)}, null, null, null);
         if (cursor != null) {
             if (cursor.moveToNext()) {
                 song = loadFromCursor(cursor);
