@@ -7,8 +7,6 @@ import android.content.ServiceConnection;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.IBinder;
-import android.os.Message;
-import android.os.Messenger;
 import android.os.RemoteException;
 import android.widget.Toast;
 
@@ -21,7 +19,6 @@ import com.cml.imitate.netease.service.MusicService;
 import com.cml.imitate.netease.service.aidl.MusicControlCallback;
 import com.cml.imitate.netease.service.aidl.MusicControlService;
 import com.cml.imitate.netease.utils.pref.PrefUtil;
-import com.cml.imitate.netease.utils.songlist.SongListUtil;
 import com.socks.library.KLog;
 
 import java.util.List;
@@ -44,35 +41,35 @@ public class ContainerPresenter implements ContainerContract.Presenter {
     private SongDbClient songDbClient;
 
 
-    private Messenger serviceMessenger = new Messenger(new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            Toast.makeText(context, "回调了", Toast.LENGTH_LONG).show();
-            switch (msg.what) {
-                case MusicService.ControlCode.PLAY_INDEX:
-                    homeView.setPlayStatus(msg.arg1 == MusicService.ControlCode.OK);
-                    //播放成功
-                    if (msg.arg1 == MusicService.ControlCode.OK) {
-                        //TODO 设置进度条
-                        Song song = SongListUtil.getInstance().getCurrent();
-                        homeView.setPlaybar(song);
-                        //TODO 设置timeer
-                        new ProgressController(song.duration, 24, homeView).start();
-                    }
-                    break;
-                case MusicService.ControlCode.COMPLETED:
-                    homeView.setPlayStatus(false);
-                    Song song = SongListUtil.getInstance().next();
-                    //播放下一首
-                    if (null != song) {
-                        homeView.setPlaybar(song);
-                        play();
-                    }
-                    break;
-            }
-            super.handleMessage(msg);
-        }
-    });
+    //    private Messenger serviceMessenger = new Messenger(new Handler() {
+//        @Override
+//        public void handleMessage(Message msg) {
+//            Toast.makeText(context, "回调了", Toast.LENGTH_LONG).show();
+//            switch (msg.what) {
+//                case MusicService.ControlCode.PLAY_INDEX:
+//                    homeView.setPlayStatus(msg.arg1 == MusicService.ControlCode.OK);
+//                    //播放成功
+//                    if (msg.arg1 == MusicService.ControlCode.OK) {
+//                        //TODO 设置进度条
+////                        Song song = SongListUtil.getInstance().getCurrent();
+////                        homeView.setPlaybar(song);
+//                        //TODO 设置timeer
+////                        new ProgressController(song.duration, 24, homeView).start();
+//                    }
+//                    break;
+//                case MusicService.ControlCode.COMPLETED:
+//                    homeView.setPlayStatus(false);
+////                    Song song = SongListUtil.getInstance().next();
+//                    //播放下一首
+//                    if (null != song) {
+//                        homeView.setPlaybar(song);
+//                        play();
+//                    }
+//                    break;
+//            }
+//            super.handleMessage(msg);
+//        }
+//    });
     private MusicControlService controlService;
 
     public ContainerPresenter(final ContainerContract.View homeView, final Context context) {
@@ -82,26 +79,23 @@ public class ContainerPresenter implements ContainerContract.Presenter {
         songListDbClient = new SongListDbClient(context);
         songDbClient = new SongDbClient(context);
         //设置上次播放界面
-        if (PrefUtil.getCurrentPlayId() != null) {
-            Observable.create(new Observable.OnSubscribe<Song>() {
-                @Override
-                public void call(Subscriber<? super Song> subscriber) {
-                    if (!subscriber.isUnsubscribed()) {
-                        subscriber.onNext(SongListUtil.getInstance().getCurrent());
-//                        subscriber.onNext(songDbClient.query(PrefUtil.getCurrentPlayId()));
-                        subscriber.onCompleted();
-                    }
+        Observable.create(new Observable.OnSubscribe<Song>() {
+            @Override
+            public void call(Subscriber<? super Song> subscriber) {
+                if (!subscriber.isUnsubscribed()) {
+                    subscriber.onNext(songListDbClient.getSong(SongListContract.STATUS_PLAY));
+                    subscriber.onCompleted();
                 }
-            }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Song>() {
-                @Override
-                public void call(Song song) {
-                    if (null != song) {
-                        Toast.makeText(context, "显示上次的音乐信息", Toast.LENGTH_LONG).show();
-                        homeView.setPlaybar(song);
-                    }
+            }
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Song>() {
+            @Override
+            public void call(Song song) {
+                if (null != song) {
+                    Toast.makeText(context, "显示上次的音乐信息", Toast.LENGTH_LONG).show();
+                    homeView.setPlaybar(song);
                 }
-            });
-        }
+            }
+        });
     }
 
     private Handler callbackHandler = new Handler();
@@ -115,7 +109,7 @@ public class ContainerPresenter implements ContainerContract.Presenter {
                 public void run() {
                     switch (type) {
                         case MusicService.ControlCode.PREPARED://播放准备完成
-                            homeView.setPlaybar(SongListUtil.getInstance().getCurrent());
+                            homeView.setPlaybar(songListDbClient.getSong(SongListContract.STATUS_PLAY));
                             break;
                     }
                 }
@@ -214,6 +208,7 @@ public class ContainerPresenter implements ContainerContract.Presenter {
                 if (null != song) {
                     return song;
                 }
+                songListDbClient.generateDefaultPlayingSong();
                 return songListDbClient.getSong(SongListContract.STATUS_PLAY);
             }
         }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<Song>() {
@@ -242,7 +237,7 @@ public class ContainerPresenter implements ContainerContract.Presenter {
 
     @Override
     public void next() {
-        SongListUtil.getInstance().next();
+        songListDbClient.next();
         play();
     }
 

@@ -29,8 +29,23 @@ public class SongListDbClient extends DataBaseClient {
         helper.getWritableDatabase().delete(SongListContract.TABLE, null, null);
         //生成播放列表
         helper.getWritableDatabase().execSQL("INSERT INTO " + SongListContract.TABLE + "(" + SongListContract._ID + ") SELECT " + SongContract.Columns._ID + "  FROM " + SongContract.TABLE + (random ? " ORDER BY RANDOM()" : ""));
+
+        generateDefaultPlayingSong();
     }
 
+    public void generateDefaultPlayingSong() {
+        //设置第一个默认播放
+        Cursor cursor = helper.getWritableDatabase().rawQuery("SELECT ts.* FROM " + SongListContract.TABLE + " tsl INNER JOIN " + SongContract.TABLE + " ts ON ts." + SongContract.Columns._ID + "=tsl." + SongListContract._ID + " limit 1",
+                null);
+
+        if (null != cursor) {
+            if (cursor.moveToNext()) {
+                Song song = SongDbClient.loadFromCursor(cursor);
+                setPlay(song.id);
+            }
+            cursor.close();
+        }
+    }
 
     public List<Song> getSongList() {
         List<Song> songList = new ArrayList<>();
@@ -44,6 +59,7 @@ public class SongListDbClient extends DataBaseClient {
         }
         return songList;
     }
+
 
     public Song getSong(int status) {
         Cursor cursor = helper.getWritableDatabase().rawQuery("SELECT ts.* FROM " + SongListContract.TABLE + " tsl INNER JOIN " +
@@ -67,19 +83,27 @@ public class SongListDbClient extends DataBaseClient {
 
         contentValues.clear();
         contentValues.put(SongListContract.STATUS, SongListContract.STATUS_PLAY);
+
         //设置指定id为状态
-        helper.getWritableDatabase().update(SongListContract.TABLE, contentValues, songId == 0 ? " 1 = 1 limit 1" : SongListContract._ID + "=?", new String[]{String.valueOf(songId)});
+        helper.getWritableDatabase().update(SongListContract.TABLE, contentValues, SongListContract._ID + "=" + songId, null);
     }
 
     public Song next() {
-        Cursor cursor = helper.getWritableDatabase().rawQuery("SELECT ts.* FROM " + SongListContract.TABLE + " tsl INNER JOIN " + SongContract.TABLE + " ts ON ts." + SongContract.Columns._ID + "=tsl." + SongListContract._ID + " WHERE ts.id > 1 limit 1",
-                null);
-        Song song = null;
-        if (null != cursor) {
-            if (cursor.moveToNext()) {
-                song = SongDbClient.loadFromCursor(cursor);
+        Song song = getSong(SongListContract.STATUS_PLAY);
+
+        if (song != null) {
+            Cursor cursor = helper.getWritableDatabase().rawQuery("SELECT ts.* FROM " + SongListContract.TABLE + " tsl INNER JOIN " + SongContract.TABLE + " ts ON ts._id=tsl._id WHERE ts._id > ? limit 1",
+                    new String[]{
+                            String.valueOf(song.id)
+                    });
+            if (null != cursor) {
+                if (cursor.moveToNext()) {
+                    song = SongDbClient.loadFromCursor(cursor);
+                }
+                cursor.close();
+
+                setPlay(song.id);
             }
-            cursor.close();
         }
         return song;
     }
