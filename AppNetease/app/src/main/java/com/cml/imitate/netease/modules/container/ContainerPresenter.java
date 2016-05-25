@@ -16,6 +16,7 @@ import com.cml.imitate.netease.application.AppApplication;
 import com.cml.imitate.netease.db.SongDbClient;
 import com.cml.imitate.netease.db.SongListDbClient;
 import com.cml.imitate.netease.db.bean.Song;
+import com.cml.imitate.netease.db.contract.SongListContract;
 import com.cml.imitate.netease.service.MusicService;
 import com.cml.imitate.netease.service.aidl.MusicControlCallback;
 import com.cml.imitate.netease.service.aidl.MusicControlService;
@@ -29,6 +30,7 @@ import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -198,19 +200,44 @@ public class ContainerPresenter implements ContainerContract.Presenter {
 
     @Override
     public void play() {
-        try {
-            controlService.play(SongListUtil.getInstance().getCurrent().id);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-//        Message msg = Message.obtain();
-//        msg.what = MusicService.ControlCode.PLAY_INDEX;
-//        try {
-//            msg.replyTo = serviceMessenger;
-//            sendMessenger.send(msg);
-//        } catch (RemoteException e) {
-//            e.printStackTrace();
-//        }
+        Observable.create(new Observable.OnSubscribe<Song>() {
+            @Override
+            public void call(Subscriber<? super Song> subscriber) {
+                if (!subscriber.isUnsubscribed()) {
+                    subscriber.onNext(songListDbClient.getSong(SongListContract.STATUS_PLAY));
+                    subscriber.onCompleted();
+                }
+            }
+        }).map(new Func1<Song, Song>() {
+            @Override
+            public Song call(Song song) {
+                if (null != song) {
+                    return song;
+                }
+                return songListDbClient.getSong(SongListContract.STATUS_PLAY);
+            }
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<Song>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                KLog.e("=====>play error:", e);
+            }
+
+            @Override
+            public void onNext(Song song) {
+                if (null != song) {
+                    try {
+                        controlService.play(song.id);
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
     }
 
     @Override

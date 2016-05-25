@@ -68,7 +68,7 @@ public class SongListDbClient extends DataBaseClient {
         contentValues.clear();
         contentValues.put(SongListContract.STATUS, SongListContract.STATUS_PLAY);
         //设置指定id为状态
-        helper.getWritableDatabase().update(SongListContract.TABLE, contentValues, SongListContract._ID + "=?", new String[]{String.valueOf(songId)});
+        helper.getWritableDatabase().update(SongListContract.TABLE, contentValues, songId == 0 ? " 1 = 1 limit 1" : SongListContract._ID + "=?", new String[]{String.valueOf(songId)});
     }
 
     public Song next() {
