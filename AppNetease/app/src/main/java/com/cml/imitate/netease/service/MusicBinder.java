@@ -43,6 +43,7 @@ public class MusicBinder extends MusicControlService.Stub implements MusicPlayer
 
     @Override
     public void pause() throws RemoteException {
+        musicPlayerClient.pause();
         //TODO
 //            case ControlCode.PAUSE://音乐暂停
 //            playMessenger = msg.replyTo;
