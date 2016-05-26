@@ -8,7 +8,8 @@ CREATE TABLE t_song (
     duration    INTEGER
 );
 CREATE TABLE t_song_list (
-    _id                 INTEGER PRIMARY KEY,
+    _id                 INTEGER,
+    list_id             INTEGER PRIMARY KEY AUTOINCREMENT,
     status              INTEGER,
     play_position       INTEGER
 );

@@ -12,13 +12,13 @@ import android.widget.Toast;
 
 import com.cml.imitate.netease.application.AppApplication;
 import com.cml.imitate.netease.db.SongDbClient;
-import com.cml.imitate.netease.db.SongListDbClient;
 import com.cml.imitate.netease.db.bean.Song;
 import com.cml.imitate.netease.db.contract.SongListContract;
 import com.cml.imitate.netease.service.MusicService;
 import com.cml.imitate.netease.service.aidl.MusicControlCallback;
 import com.cml.imitate.netease.service.aidl.MusicControlService;
 import com.cml.imitate.netease.utils.pref.PrefUtil;
+import com.cml.imitate.netease.utils.songlist.SonglistHelper;
 import com.socks.library.KLog;
 
 import java.util.List;
@@ -37,7 +37,7 @@ public class ContainerPresenter implements ContainerContract.Presenter {
 
     private ContainerContract.View homeView;
     private Context context;
-    private SongListDbClient songListDbClient;
+    private SonglistHelper songlistHelper;
     private SongDbClient songDbClient;
 
 
@@ -76,14 +76,14 @@ public class ContainerPresenter implements ContainerContract.Presenter {
         this.homeView = homeView;
         this.context = context;
         homeView.setPresenter(this);
-        songListDbClient = new SongListDbClient(context);
+        songlistHelper = new SonglistHelper(context);
         songDbClient = new SongDbClient(context);
         //设置上次播放界面
         Observable.create(new Observable.OnSubscribe<Song>() {
             @Override
             public void call(Subscriber<? super Song> subscriber) {
                 if (!subscriber.isUnsubscribed()) {
-                    subscriber.onNext(songListDbClient.getSong(SongListContract.STATUS_PLAY));
+                    subscriber.onNext(songlistHelper.getSong(SongListContract.STATUS_PLAY));
                     subscriber.onCompleted();
                 }
             }
@@ -109,7 +109,7 @@ public class ContainerPresenter implements ContainerContract.Presenter {
                 public void run() {
                     switch (type) {
                         case MusicService.ControlCode.PREPARED://播放准备完成
-                            homeView.setPlaybar(songListDbClient.getSong(SongListContract.STATUS_PLAY));
+                            homeView.setPlaybar(songlistHelper.getSong(SongListContract.STATUS_PLAY));
                             break;
                     }
                 }
@@ -129,10 +129,10 @@ public class ContainerPresenter implements ContainerContract.Presenter {
                 e.printStackTrace();
             }
 
-            List<Song> songList = songListDbClient.getSongList();
+            List<Song> songList = songlistHelper.getSongList();
             KLog.d(AppApplication.TAG, "songlist==>" + songList);
             if (songList.size() == 0) {
-                songListDbClient.generateSongList(false);
+                songlistHelper.generateSongList(false);
             } else {
                 PrefUtil.setCurrentPlayId(String.valueOf(songList.get(2).id));
 //                //校验ui信息
@@ -198,7 +198,7 @@ public class ContainerPresenter implements ContainerContract.Presenter {
             @Override
             public void call(Subscriber<? super Song> subscriber) {
                 if (!subscriber.isUnsubscribed()) {
-                    subscriber.onNext(songListDbClient.getSong(SongListContract.STATUS_PLAY));
+                    subscriber.onNext(songlistHelper.getSong(SongListContract.STATUS_PLAY));
                     subscriber.onCompleted();
                 }
             }
@@ -208,8 +208,8 @@ public class ContainerPresenter implements ContainerContract.Presenter {
                 if (null != song) {
                     return song;
                 }
-                songListDbClient.generateDefaultPlayingSong();
-                return songListDbClient.getSong(SongListContract.STATUS_PLAY);
+                songlistHelper.generateDefaultPlayingSong();
+                return songlistHelper.getSong(SongListContract.STATUS_PLAY);
             }
         }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<Song>() {
             @Override
@@ -237,7 +237,11 @@ public class ContainerPresenter implements ContainerContract.Presenter {
 
     @Override
     public void next() {
-        songListDbClient.next();
+        int nextId = songlistHelper.next();
+        //没有歌曲了
+        if (0 == nextId) {
+            return;
+        }
         play();
     }
 

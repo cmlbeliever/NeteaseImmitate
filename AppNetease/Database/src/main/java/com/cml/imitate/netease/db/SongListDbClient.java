@@ -88,37 +88,26 @@ public class SongListDbClient extends DataBaseClient {
         helper.getWritableDatabase().update(SongListContract.TABLE, contentValues, SongListContract._ID + "=" + songId, null);
     }
 
-    public Song next() {
-        Song song = getSong(SongListContract.STATUS_PLAY);
+    public int next(int songId) {
 
-        if (song != null) {
-            Cursor cursor = helper.getWritableDatabase().rawQuery("SELECT ts.* FROM " + SongListContract.TABLE + " tsl INNER JOIN " + SongContract.TABLE + " ts ON ts._id=tsl._id WHERE ts._id > ? limit 1",
-                    new String[]{
-                            String.valueOf(song.id)
-                    });
-            if (null != cursor) {
-                if (cursor.moveToNext()) {
-                    song = SongDbClient.loadFromCursor(cursor);
-                }
-                cursor.close();
+        Cursor cursor = helper.getWritableDatabase().query(SongListContract.TABLE, new String[]{SongListContract.LIST_ID}, SongListContract._ID + "=?", new String[]{
+                String.valueOf(songId)
+        }, null, null, null);
 
-                setPlay(song.id);
-            }
-        }
-        return song;
-    }
-
-    public Song getPlayingSong() {
-        Cursor cursor = helper.getWritableDatabase().rawQuery("SELECT ts.* FROM " + SongListContract.TABLE + " tsl INNER JOIN " + SongContract.TABLE + " ts ON ts." + SongContract.Columns._ID + "=tsl." + SongListContract._ID + " WHERE ts.status = 1 limit 1",
-                null);
-        Song song = null;
         if (null != cursor) {
             if (cursor.moveToNext()) {
-                song = SongDbClient.loadFromCursor(cursor);
+                int listId = cursor.getInt(0);
+                cursor.close();
+                //获取下一首音乐id
+                cursor = helper.getWritableDatabase().query(SongListContract.TABLE, new String[]{SongListContract._ID}, SongListContract.LIST_ID + ">?"
+                        , new String[]{String.valueOf(listId)}, null, null, SongListContract.LIST_ID + " limit 1");
+                if (cursor.moveToNext()) {
+                    int nextSongId = cursor.getInt(0);
+                    cursor.close();
+                    return nextSongId;
+                }
             }
-            cursor.close();
         }
-        return song;
+        return 0;
     }
-
 }

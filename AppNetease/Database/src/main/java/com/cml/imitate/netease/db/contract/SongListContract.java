@@ -24,4 +24,7 @@ public interface SongListContract extends BaseColumns {
      * <p>type:int</p>
      */
     String POSITION = "play_position";
+
+
+    String LIST_ID = "list_id";
 }
