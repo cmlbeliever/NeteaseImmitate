@@ -22,18 +22,13 @@ public class MusicPlayerClient {
         this.callback = callback;
     }
 
-    public boolean isPlaying() {
-        return null != player && player.isPlaying();
+    public boolean isPause() {
+        return null != player && !player.isPlaying();
     }
 
     public void play(Uri uri, boolean isOrigin) {
         if (null != player) {
-            if (isOrigin) {
-                player.release();
-            } else if (!player.isPlaying()) {
-                player.start();
-                return;
-            }
+            player.release();
         }
         //重新播放
         player = new MediaPlayer();
@@ -64,6 +59,7 @@ public class MusicPlayerClient {
                 @Override
                 public void onCompletion(MediaPlayer mp) {
                     mp.release();
+                    player = null;
                     if (null != callback) {
                         callback.onCompletion(mp);
                     }

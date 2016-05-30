@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.os.ResultReceiver;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cml.imitate.netease.R;
 import com.cml.imitate.netease.db.bean.Song;
@@ -55,6 +57,17 @@ public class ContainerActivity extends BaseActivity implements ContainerContract
         setTranslucenteBar();
         setContentView(R.layout.activity_main);
 
+        StringBuilder ret = new StringBuilder();
+
+        String version = System.getProperty("java.vm.version");
+        ret.append("Current VM version:").append(version).append("\n");
+        if (Integer.valueOf(version.substring(0, version.indexOf("."))) >= 2) {
+            ret.append("You are currently using ART!");
+        } else {
+            ret.append("You are currently using Dalvik!");
+        }
+
+        Toast.makeText(this,ret.toString(),Toast.LENGTH_LONG).show();
 
         ButterKnife.bind(this);
         //TODO

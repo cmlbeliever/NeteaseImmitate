@@ -12,5 +12,5 @@ interface MusicControlService {
 
     void register(MusicControlCallback callback);
 
-    boolean isPlaying();
+    boolean isPause();
 }

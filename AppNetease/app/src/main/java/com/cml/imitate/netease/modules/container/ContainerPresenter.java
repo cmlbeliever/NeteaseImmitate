@@ -196,12 +196,12 @@ public class ContainerPresenter implements ContainerContract.Presenter {
     public void play() {
 
         try {
-            if (controlService.isPlaying()) {
+            if (controlService.isPause()) {
                 controlService.start(1);
                 return;
             }
         } catch (Exception e) {
-
+            KLog.e(e);
         }
 
         Observable.create(new Observable.OnSubscribe<Song>() {

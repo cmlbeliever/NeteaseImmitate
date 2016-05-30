@@ -91,7 +91,7 @@ public class MusicBinder extends MusicControlService.Stub implements MusicPlayer
     }
 
     @Override
-    public boolean isPlaying() throws RemoteException {
-        return musicPlayerClient.isPlaying();
+    public boolean isPause() throws RemoteException {
+        return musicPlayerClient.isPause();
     }
 }
