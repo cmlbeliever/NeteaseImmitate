@@ -2,6 +2,7 @@ package com.cml.imitate.netease.modules.local;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.provider.MediaStore;
 
 import com.cml.imitate.netease.R;
@@ -103,6 +104,11 @@ public class MusicScannerPresent implements MusicScannerContract.Present {
                         Song song = new Song(id, tilte, album, artist, url, url, duration);
                         songs.add(song);
 
+                        int album_id = cursor.getInt(cursor
+                                .getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID));
+
+                        String art = getAlbumArt(context, album_id);
+
                         //插入db信息
                         dbClient.replaceSong(song);
                         //通知界面显示
@@ -132,6 +138,11 @@ public class MusicScannerPresent implements MusicScannerContract.Present {
                 scanResultSubject.onNext(context.getResources().getString(R.string.local_scan_finish, songs.size()));
             }
         });
+    }
+
+    private String getAlbumArt(Context context, int mediaId) {
+        Bitmap bitmap = MediaStore.Images.Thumbnails.getThumbnail(context.getContentResolver(), mediaId, MediaStore.Images.Thumbnails.MICRO_KIND, null);
+        return "";
     }
 
     @Override

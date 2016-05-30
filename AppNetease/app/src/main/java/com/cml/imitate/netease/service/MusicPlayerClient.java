@@ -22,6 +22,10 @@ public class MusicPlayerClient {
         this.callback = callback;
     }
 
+    public boolean isPlaying() {
+        return null != player && player.isPlaying();
+    }
+
     public void play(Uri uri, boolean isOrigin) {
         if (null != player) {
             if (isOrigin) {
@@ -73,6 +77,12 @@ public class MusicPlayerClient {
     public void pause() {
         if (null != player && player.isPlaying()) {
             player.pause();
+        }
+    }
+
+    public void start() {
+        if (null != player && !player.isPlaying()) {
+            player.start();
         }
     }
 

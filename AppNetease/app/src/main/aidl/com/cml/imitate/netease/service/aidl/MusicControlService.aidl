@@ -11,4 +11,6 @@ interface MusicControlService {
     void start(int songId);
 
     void register(MusicControlCallback callback);
+
+    boolean isPlaying();
 }

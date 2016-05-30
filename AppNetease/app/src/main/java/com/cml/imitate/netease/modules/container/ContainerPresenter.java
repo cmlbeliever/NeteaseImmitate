@@ -194,6 +194,16 @@ public class ContainerPresenter implements ContainerContract.Presenter {
 
     @Override
     public void play() {
+
+        try {
+            if (controlService.isPlaying()) {
+                controlService.start(1);
+                return;
+            }
+        } catch (Exception e) {
+
+        }
+
         Observable.create(new Observable.OnSubscribe<Song>() {
             @Override
             public void call(Subscriber<? super Song> subscriber) {

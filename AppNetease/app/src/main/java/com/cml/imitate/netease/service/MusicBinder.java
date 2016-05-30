@@ -54,6 +54,7 @@ public class MusicBinder extends MusicControlService.Stub implements MusicPlayer
     @Override
     public void start(int songId) throws RemoteException {
         //TODO
+        musicPlayerClient.start();
     }
 
     private void callback(int type, int result, int songId) {
@@ -87,5 +88,10 @@ public class MusicBinder extends MusicControlService.Stub implements MusicPlayer
     @Override
     public void onPrepared(MediaPlayer mp) {
         callback(MusicService.ControlCode.PREPARED, MusicService.ControlCode.OK, 0);
+    }
+
+    @Override
+    public boolean isPlaying() throws RemoteException {
+        return musicPlayerClient.isPlaying();
     }
 }
